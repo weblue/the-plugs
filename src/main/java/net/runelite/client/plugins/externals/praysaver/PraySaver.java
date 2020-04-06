@@ -46,6 +46,7 @@ import net.runelite.client.plugins.externals.utils.Tab;
 import net.runelite.client.util.Clipboard;
 import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.HotkeyListener;
+import net.runelite.api.events.GameTick;
 import org.apache.commons.lang3.tuple.Pair;
 import org.pf4j.Extension;
 
@@ -61,29 +62,18 @@ import org.pf4j.Extension;
 @PluginDependency(ExtUtils.class)
 public class PraySaver extends Plugin
 {
-	private static final Splitter NEWLINE_SPLITTER = Splitter
-		.on("\n")
-		.omitEmptyStrings()
-		.trimResults();
-
 	@Inject
 	private Client client;
-
 	@Inject
 	private KeyManager keyManager;
-
 	@Inject
 	private CustomSwapperConfig config;
-
-	@Inject
-	private EventBus eventBus;
-
 	@Inject
 	private ExtUtils utils;
 
 	private ExecutorService executor;
 	private Robot robot;
-
+//TODO implement bum mode
 	@Provides
 	CustomSwapperConfig getConfig(ConfigManager manager)
 	{
@@ -93,11 +83,12 @@ public class PraySaver extends Plugin
 	@Override
 	protected void startUp() throws AWTException
 	{
+		//TODO default running state true?
 		executor = Executors.newFixedThreadPool(1);
 		robot = new Robot();
 		if (client.getGameState() == GameState.LOGGED_IN)
 		{
-			keyManager.registerKeyListener(one);
+			keyManager.registerKeyListener(hotkey);
 		}
 	}
 
@@ -105,7 +96,21 @@ public class PraySaver extends Plugin
 	protected void shutDown()
 	{
 		executor.shutdown();
-		keyManager.unregisterKeyListener(one);
+		//TODO disable running state?
+		keyManager.unregisterKeyListener(hotkey);
+	}
+
+	@Subscribe
+	public void onGameTick() {
+		final Widget widget = client.getWidget(WidgetInfo.MINIMAP_QUICK_PRAYER_ORB);
+
+		//TODO check healthbar not visible
+		if (widget.getSpriteId() == 1058 && client.getLocalPlayer().getHealth() == null) {
+			disable();
+		}// else if (widget.getSpriteId() != 1058) {
+		//	log.debug("Quick pray: already disabled");
+		//}
+
 	}
 
 	@Subscribe
@@ -113,235 +118,29 @@ public class PraySaver extends Plugin
 	{
 		if (event.getGameState() != GameState.LOGGED_IN)
 		{
-			keyManager.unregisterKeyListener(one);
+			//TODO disable running state?
+			keyManager.unregisterKeyListener(hotkey);
 			return;
 		}
-		keyManager.registerKeyListener(one);
+		//TODO enable running state?
+		keyManager.registerKeyListener(hotkey);
 	}
 
-	private void decode(String string)
-	{
-		final Map<String, String> map = new LinkedHashMap<>();
-		final List<Pair<Tab, Rectangle>> rectPairs = new ArrayList<>();
-		final Iterable<String> tmp = NEWLINE_SPLITTER.split(string);
+	private void disable() {
+		final Widget widget = client.getWidget(WidgetInfo.MINIMAP_QUICK_PRAYER_ORB);
 
-		for (String s : tmp)
+		if (widget == null)
 		{
-			String[] split = s.split(":");
-			try
-			{
-				map.put(split[0], split[1]);
-			}
-			catch (IndexOutOfBoundsException e)
-			{
-				log.error("Decode: Invalid Syntax in decoder.");
-				dispatchError("Invalid Syntax in decoder.");
-				return;
-			}
+			log.debug("Quick pray: Can't find valid widget");
+			continue;
 		}
 
-		for (Map.Entry<String, String> entry : map.entrySet())
-		{
-			String param = entry.getKey();
-			String command = entry.getValue().toLowerCase();
-
-			switch (command)
-			{
-				case "equip":
-				{
-					final Rectangle rect = invBounds(Integer.parseInt(param));
-
-					if (rect == null)
-					{
-						log.debug("Equip: Can't find valid bounds for param {}.", param);
-						continue;
-					}
-
-					rectPairs.add(Pair.of(Tab.INVENTORY, rect));
-				}
-				break;
-				case "clean":
-				{
-					final List<Rectangle> rectangleList = listOfBounds(Integer.parseInt(param));
-
-					if (rectangleList.isEmpty())
-					{
-						log.debug("Clean: Can't find valid bounds for param {}.", param);
-						continue;
-					}
-
-					for (Rectangle rect : rectangleList)
-					{
-						rectPairs.add(Pair.of(Tab.INVENTORY, rect));
-					}
-				}
-				break;
-				case "remove":
-				{
-					final Rectangle rect = equipBounds(Integer.parseInt(param));
-
-					if (rect == null)
-					{
-						log.debug("Remove: Can't find valid bounds for param {}.", param);
-						continue;
-					}
-
-					rectPairs.add(Pair.of(Tab.EQUIPMENT, rect));
-				}
-				break;
-				case "prayer":
-				{
-					final WidgetInfo info = utils.getPrayerWidgetInfo(param);
-					final Prayer p = Prayer.valueOf(param.toUpperCase().replace(" ", "_"));
-
-					if (config.enablePrayCheck() && client.isPrayerActive(p))
-					{
-						continue;
-					}
-
-					if (info == null)
-					{
-						log.debug("Prayer: Can't find valid widget info for param {}.", param);
-						continue;
-					}
-
-					final Widget widget = client.getWidget(info);
-
-					if (widget == null)
-					{
-						log.debug("Prayer: Can't find valid widget for param {}.", param);
-						continue;
-					}
-
-					rectPairs.add(Pair.of(Tab.PRAYER, widget.getBounds()));
-				}
-				break;
-				case "cast":
-				{
-					final WidgetInfo info = utils.getSpellWidgetInfo(param);
-
-					if (info == null)
-					{
-						log.debug("Cast: Can't find valid widget info for param {}.", param);
-						continue;
-					}
-
-					final Widget widget = client.getWidget(info);
-
-					if (widget == null)
-					{
-						log.debug("Cast: Can't find valid widget for param {}.", param);
-						continue;
-					}
-
-					rectPairs.add(Pair.of(Tab.SPELLBOOK, widget.getBounds()));
-				}
-				break;
-				case "enable":
-				{
-					final Widget widget = client.getWidget(593, 35);
-
-					if (widget == null)
-					{
-						log.debug("Spec: Can't find valid widget");
-						continue;
-					}
-
-					rectPairs.add(Pair.of(Tab.COMBAT, widget.getBounds()));
-				}
-				break;
-			}
-		}
-
-		executor.submit(() ->
-		{
-			for (Pair<Tab, Rectangle> pair : rectPairs)
-			{
-				int key = utils.getTabHotkey(pair.getLeft());
-
-				if (key == -1 || key == 0)
-				{
-					log.error("Unable to find key for tab.");
-					dispatchError("Unable to find " + pair.getLeft().toString() + " hotkey.");
-					break;
-				}
-
-				executePair(pair);
-				log.debug("Executing click on: {}", pair);
-
-				try
-				{
-					Thread.sleep(getMillis());
-				}
-				catch (InterruptedException e)
-				{
-					e.printStackTrace();
-				}
-			}
-
-			if (config.swapBack())
-			{
-				log.debug("Swapping back to inventory.");
-				robot.keyPress(utils.getTabHotkey(Tab.INVENTORY));
-			}
-		});
-	}
-
-	private void executePair(Pair<Tab, Rectangle> pair)
-	{
-		switch (pair.getLeft())
-		{
-			case COMBAT:
-				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.COMBAT.getId())
-				{
-					robot.delay((int) getMillis());
-					robot.keyPress(utils.getTabHotkey(pair.getLeft()));
-					robot.delay((int) getMillis());
-				}
-				utils.click(pair.getRight());
-				break;
-			case EQUIPMENT:
-				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.EQUIPMENT.getId())
-				{
-					robot.delay((int) getMillis());
-					robot.keyPress(utils.getTabHotkey(pair.getLeft()));
-					robot.delay((int) getMillis());
-				}
-				utils.click(pair.getRight());
-				break;
-			case INVENTORY:
-				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.INVENTORY.getId())
-				{
-					robot.delay((int) getMillis());
-					robot.keyPress(utils.getTabHotkey(pair.getLeft()));
-					robot.delay((int) getMillis());
-				}
-				utils.click(pair.getRight());
-				break;
-			case PRAYER:
-				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.PRAYER.getId())
-				{
-					robot.delay((int) getMillis());
-					robot.keyPress(utils.getTabHotkey(pair.getLeft()));
-					robot.delay((int) getMillis());
-				}
-				utils.click(pair.getRight());
-				break;
-			case SPELLBOOK:
-				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.SPELLBOOK.getId())
-				{
-					robot.delay((int) getMillis());
-					robot.keyPress(utils.getTabHotkey(pair.getLeft()));
-					robot.delay((int) getMillis());
-				}
-				utils.click(pair.getRight());
-				break;
-		}
+		extUtils.click(widget.getBounds());
 	}
 
 	private void dispatchError(String error)
 	{
-		String str = ColorUtil.wrapWithColorTag("Custom Swapper", Color.MAGENTA)
+		String str = ColorUtil.wrapWithColorTag("Pray Saver", Color.MAGENTA)
 			+ " has encountered an "
 			+ ColorUtil.wrapWithColorTag("error", Color.RED)
 			+ ": "
@@ -350,242 +149,18 @@ public class PraySaver extends Plugin
 		client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", str, null);
 	}
 
-	private Rectangle invBounds(int id)
-	{
-		final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
-
-		for (WidgetItem item : inventoryWidget.getWidgetItems())
-		{
-			if (item.getId() == id)
-			{
-				return item.getCanvasBounds();
-			}
-		}
-
-		return null;
-	}
-
-	private List<Rectangle> listOfBounds(int id)
-	{
-		final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
-		final List<Rectangle> bounds = new ArrayList<>();
-
-		for (WidgetItem item : inventoryWidget.getWidgetItems())
-		{
-			if (item.getId() == id)
-			{
-				bounds.add(item.getCanvasBounds());
-			}
-		}
-
-		return bounds;
-	}
-
-	private Rectangle equipBounds(int id)
-	{
-		final Widget equipmentWidget = client.getWidget(WidgetInfo.EQUIPMENT);
-
-		if (equipmentWidget.getStaticChildren() == null)
-		{
-			return null;
-		}
-
-		for (Widget widgets : equipmentWidget.getStaticChildren())
-		{
-			for (Widget items : widgets.getDynamicChildren())
-			{
-				if (items.getItemId() == id)
-				{
-					return items.getBounds();
-				}
-			}
-		}
-
-		return null;
-	}
-
 	private long getMillis()
 	{
 		return (long) (Math.random() * config.randLow() + config.randHigh());
 	}
 
-	private final HotkeyListener one = new HotkeyListener(() -> config.customOne())
+	private final HotkeyListener hotkey = new HotkeyListener(() -> config.hotkey())
 	{
 		@Override
 		public void hotkeyPressed()
 		{
+			//TODO change this to enable/disable running state
 			decode(config.customSwapOne());
-		}
-	};
-
-	private final HotkeyListener two = new HotkeyListener(() -> config.customTwo())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapTwo());
-		}
-	};
-
-	private final HotkeyListener three = new HotkeyListener(() -> config.customThree())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapThree());
-		}
-	};
-
-	private final HotkeyListener four = new HotkeyListener(() -> config.customFour())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapFour());
-		}
-	};
-
-	private final HotkeyListener five = new HotkeyListener(() -> config.customFive())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapFive());
-		}
-	};
-
-	private final HotkeyListener six = new HotkeyListener(() -> config.customSix())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapSix());
-		}
-	};
-
-	private final HotkeyListener seven = new HotkeyListener(() -> config.customSeven())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapSeven());
-		}
-	};
-
-	private final HotkeyListener eight = new HotkeyListener(() -> config.customEight())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapEight());
-		}
-	};
-
-	private final HotkeyListener nine = new HotkeyListener(() -> config.customNine())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapNine());
-		}
-	};
-
-	private final HotkeyListener ten = new HotkeyListener(() -> config.customTen())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapTen());
-		}
-	};
-
-	private final HotkeyListener eleven = new HotkeyListener(() -> config.customEleven())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapEleven());
-		}
-	};
-
-	private final HotkeyListener twelve = new HotkeyListener(() -> config.customTwelve())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapTwelve());
-		}
-	};
-
-	private final HotkeyListener thirteen = new HotkeyListener(() -> config.customThirteen())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapThirteen());
-		}
-	};
-
-	private final HotkeyListener fourteen = new HotkeyListener(() -> config.customFourteen())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapFourteen());
-		}
-	};
-
-	private final HotkeyListener fifteen = new HotkeyListener(() -> config.customFifteen())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapFifteen());
-		}
-	};
-
-	private final HotkeyListener sixteen = new HotkeyListener(() -> config.customSixteen())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapSixteen());
-		}
-	};
-
-	private final HotkeyListener seventeen = new HotkeyListener(() -> config.customSeventeen())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapSeventeen());
-		}
-	};
-
-	private final HotkeyListener eighteen = new HotkeyListener(() -> config.customEighteen())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapEighteen());
-		}
-	};
-
-	private final HotkeyListener nineteen = new HotkeyListener(() -> config.customNineteen())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapNineteen());
-		}
-	};
-
-	private final HotkeyListener twenty = new HotkeyListener(() -> config.customTwenty())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			decode(config.customSwapTwenty());
 		}
 	};
 }
