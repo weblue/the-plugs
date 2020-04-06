@@ -17,10 +17,10 @@ public interface PraySaverConfig extends Config
 {
 
 	@ConfigTitleSection(
-		keyName = "config",
-		name = "Config",
-		description = "",
-		position = 0
+			keyName = "config",
+			name = "Config",
+			description = "",
+			position = 0
 	)
 	default Title config()
 	{
@@ -28,11 +28,11 @@ public interface PraySaverConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "swapBack",
-		name = "Swap back to inventory",
-		description = "Once finished with a swap, should it swap back to inventory?",
-		titleSection = "config",
-		position = 1
+			keyName = "swapBack",
+			name = "Swap back to inventory",
+			description = "Once finished with a swap, should it swap back to inventory?",
+			titleSection = "config",
+			position = 1
 	)
 	default boolean swapBack()
 	{
@@ -40,11 +40,11 @@ public interface PraySaverConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "enablePrayCheck",
-		name = "Active Prayer Check",
-		description = "Enabling this will make it so you can't toggle prayers if they're on.",
-		titleSection = "config",
-		position = 2
+			keyName = "enablePrayCheck",
+			name = "Active Prayer Check",
+			description = "Enabling this will make it so you can't toggle prayers if they're on.",
+			titleSection = "config",
+			position = 2
 	)
 	default boolean enablePrayCheck()
 	{
@@ -52,11 +52,11 @@ public interface PraySaverConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "randLow",
-		name = "Minimum MS Delay",
-		description = "Dont set this too high.",
-		titleSection = "config",
-		position = 3
+			keyName = "randLow",
+			name = "Minimum MS Delay",
+			description = "Dont set this too high.",
+			titleSection = "config",
+			position = 3
 	)
 	default int randLow()
 	{
@@ -64,11 +64,11 @@ public interface PraySaverConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "randLower",
-		name = "Maximum MS Delay",
-		description = "Dont set this too high.",
-		titleSection = "config",
-		position = 4
+			keyName = "randLower",
+			name = "Maximum MS Delay",
+			description = "Dont set this too high.",
+			titleSection = "config",
+			position = 4
 	)
 	default int randHigh()
 	{
@@ -76,10 +76,10 @@ public interface PraySaverConfig extends Config
 	}
 
 	@ConfigTitleSection(
-		position = 1,
-		keyName = "mainConfig",
-		name = "Main Config",
-		description = ""
+			position = 1,
+			keyName = "mainConfig",
+			name = "Main Config",
+			description = ""
 	)
 	default Title mainConfig()
 	{
@@ -87,11 +87,11 @@ public interface PraySaverConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "bumMode",
-		name = "Enable pray on enter combat",
-		description = "Makes it even lazier",
-		position = 1,
-		titleSection = "mainConfig"
+			keyName = "bumMode",
+			name = "Enable pray on enter combat",
+			description = "Makes it even lazier",
+			position = 1,
+			titleSection = "mainConfig"
 	)
 	default boolean bumMode()
 	{
@@ -99,10 +99,10 @@ public interface PraySaverConfig extends Config
 	}
 
 	@ConfigTitleSection(
-		position = 2,
-		keyName = "hotkeys",
-		name = "Hotkeys",
-		description = ""
+			position = 2,
+			keyName = "hotkeys",
+			name = "Hotkeys",
+			description = ""
 	)
 	default Title hotkeys()
 	{
@@ -110,11 +110,11 @@ public interface PraySaverConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "hotkey",
-		name = "Toggle pray saver",
-		description = "",
-		position = 1,
-		titleSection = "hotkeys"
+			keyName = "hotkey",
+			name = "Toggle pray saver",
+			description = "",
+			position = 1,
+			titleSection = "hotkeys"
 	)
 	default Keybind hotkey()
 	{
