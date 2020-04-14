@@ -1,8 +1,9 @@
-import ProjectVersions.rlVersion
+//import ProjectVersions.rlVersion
 
 /*
  * Copyright (c) 2019 Owain van Brakel <https://github.com/Owain94>
  * Copyright (c) 2019 Ganom <https://github.com/Ganom>
+ * Copyright (c) 2019 Nader
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,24 +27,22 @@ import ProjectVersions.rlVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "1.0.0"
+version = "0.0.1"
 
 project.extra["PluginName"] = "Pray Saver"
 project.extra["PluginDescription"] = "Save your pray while you slay"
 
-dependencies {
+/*dependencies {
     annotationProcessor(Libraries.lombok)
     annotationProcessor(Libraries.pf4j)
-    compileOnly(project(":ExtUtils"))
+
     compileOnly("com.openosrs:runelite-api:$rlVersion")
     compileOnly("com.openosrs:runelite-client:$rlVersion")
+
     compileOnly(Libraries.guice)
     compileOnly(Libraries.lombok)
     compileOnly(Libraries.pf4j)
-    compileOnly(Libraries.okhttp3)
-    compileOnly(Libraries.apacheCommonsText)
-    compileOnly(Libraries.rxjava)
-}
+}*/
 
 tasks {
     jar {
@@ -52,7 +51,6 @@ tasks {
                     "Plugin-Version" to project.version,
                     "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
                     "Plugin-Provider" to project.extra["PluginProvider"],
-                    "Plugin-Dependencies" to nameToId("extutils"),
                     "Plugin-Description" to project.extra["PluginDescription"],
                     "Plugin-License" to project.extra["PluginLicense"]
             ))
