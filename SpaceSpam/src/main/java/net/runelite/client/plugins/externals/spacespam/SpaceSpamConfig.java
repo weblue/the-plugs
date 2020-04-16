@@ -12,11 +12,11 @@ import net.runelite.client.config.ConfigTitleSection;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.config.Title;
 
-@ConfigGroup("PraySaverConfig")
-public interface PraySaverConfig extends Config
+@ConfigGroup("SpaceSpamConfig")
+public interface SpaceSpamConfig extends Config
 {
 
-	@ConfigTitleSection(
+	/*@ConfigTitleSection(
 			position = 1,
 			keyName = "mainConfig",
 			name = "Main Config",
@@ -37,7 +37,7 @@ public interface PraySaverConfig extends Config
 	default boolean bumMode()
 	{
 		return false;
-	}
+	}*/
 
 	@ConfigTitleSection(
 			position = 2,
@@ -52,7 +52,7 @@ public interface PraySaverConfig extends Config
 
 	@ConfigItem(
 			keyName = "hotkey",
-			name = "Toggle pray saver",
+			name = "Toggle space spam",
 			description = "",
 			position = 1,
 			titleSection = "hotkeys"

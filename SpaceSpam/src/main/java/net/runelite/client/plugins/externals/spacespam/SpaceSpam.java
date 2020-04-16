@@ -6,7 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
+import java.awt.event.KeyEvent;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.inject.Inject;
@@ -44,14 +44,14 @@ public class SpaceSpam extends Plugin {
     @Inject
     private KeyManager keyManager;
     @Inject
-    private PraySaverConfig config;
+    private SpaceSpamConfig config;
 
     private boolean running = false;
     private ExecutorService executor;
 
     @Provides
-    PraySaverConfig provideConfig(ConfigManager manager) {
-        return manager.getConfig(PraySaverConfig.class);
+    SpaceSpamConfig provideConfig(ConfigManager manager) {
+        return manager.getConfig(SpaceSpamConfig.class);
     }
 
     @Override
@@ -72,16 +72,9 @@ public class SpaceSpam extends Plugin {
     @Subscribe
     private void onGameTick(GameTick tick) {
         if (running) {
-            if (client.getVar(Varbits.QUICK_PRAYER) == 1 &&
-                    client.getLocalPlayer().getHealthRatio() == -1) {
-                toggle();
-                log.debug("PraySaver: toggling prayer off");
-            } else if (client.getLocalPlayer().getHealthRatio() > 0 &&
-                    client.getVar(Varbits.QUICK_PRAYER) == 0 &&
-                    config.bumMode()) {
-                toggle();
-                log.debug("PraySaver: toggling prayer on");
-            }
+            //TODO hit space if dialog is open
+            if ()
+                press();
         }
     }
 
@@ -96,18 +89,6 @@ public class SpaceSpam extends Plugin {
         }
     }
 
-
-    private void toggle() {
-        final Widget widget = client.getWidget(WidgetInfo.MINIMAP_QUICK_PRAYER_ORB);
-
-        if (widget == null) {
-            log.debug("PraySaver: Can't find valid widget");
-            return;
-        }
-
-        click(widget.getBounds());
-    }
-
     private void dispatchError(String error) {
         String str = ColorUtil.wrapWithColorTag("Pray Saver", Color.MAGENTA)
                 + " has encountered an "
@@ -118,54 +99,22 @@ public class SpaceSpam extends Plugin {
         client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", str, null);
     }
 
-    /**
-     * This method must be called on a new
-     * thread, if you try to call it on
-     * {@link net.runelite.client.callback.ClientThread}
-     * it will result in a crash/desynced thread.
-     */
-    private void click(Rectangle rectangle) {
-        assert !client.isClientThread();
-        Point point = getClickPoint(rectangle);
-        click(point);
-    }
-
-    private void click(Point p) {
+    private void press() {
         assert !client.isClientThread();
 
-        if (client.isStretchedEnabled()) {
-            final Dimension stretched = client.getStretchedDimensions();
-            final Dimension real = client.getRealDimensions();
-            final double width = (stretched.width / real.getWidth());
-            final double height = (stretched.height / real.getHeight());
-            final Point point = new Point((int) (p.getX() * width), (int) (p.getY() * height));
-            mouseEvent(501, point);
-            mouseEvent(502, point);
-            mouseEvent(500, point);
-            return;
-        }
-        mouseEvent(501, p);
-        mouseEvent(502, p);
-        mouseEvent(500, p);
+        keyEvent(401, KeyEvent.VK_SPACE, ' ');
+        keyEvent(402, KeyEvent.VK_SPACE, ' ');
+        keyEvent(400, KeyEvent.VK_SPACE, ' ');
     }
 
-    private Point getClickPoint(@NotNull Rectangle rect) {
-        final int x = (int) (rect.getX() + getRandomIntBetweenRange((int) rect.getWidth() / 6 * -1, (int) rect.getWidth() / 6) + rect.getWidth() / 2);
-        final int y = (int) (rect.getY() + getRandomIntBetweenRange((int) rect.getHeight() / 6 * -1, (int) rect.getHeight() / 6) + rect.getHeight() / 2);
-
-        return new Point(x, y);
-    }
-
-    private int getRandomIntBetweenRange(int min, int max) {
-        return (int) ((Math.random() * ((max - min) + 1)) + min);
-    }
-
-    private void mouseEvent(int id, @NotNull Point point) {
-        MouseEvent e = new MouseEvent(
-                client.getCanvas(), id,
+    private void keyEvent(int id, int key, char c) {
+        KeyEvent e = new KeyEvent(
+                client.getCanvas(),
+                id,
                 System.currentTimeMillis(),
-                0, (int) point.getX(), (int) point.getY(),
-                1, false, 1
+                0,
+                key,
+                c
         );
 
         client.getCanvas().dispatchEvent(e);
