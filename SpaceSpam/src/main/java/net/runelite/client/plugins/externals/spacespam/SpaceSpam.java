@@ -3,9 +3,6 @@ package net.runelite.client.plugins.externals.spacespam;
 import com.google.inject.Provides;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,10 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.Varbits;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
-import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -28,14 +23,13 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
 import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.HotkeyListener;
-import org.jetbrains.annotations.NotNull;
 import org.pf4j.Extension;
 
 @Extension
 @PluginDescriptor(
-        name = "Pray Saver",
-        description = "Save your pray while you slay",
-        type = PluginType.UTILITY
+        name = "Space Spam",
+        description = "Everybody get up, it's time to spam now",
+        type = PluginType.SKILLING
 )
 @Slf4j
 public class SpaceSpam extends Plugin {
@@ -73,7 +67,8 @@ public class SpaceSpam extends Plugin {
     private void onGameTick(GameTick tick) {
         if (running) {
             //TODO hit space if dialog is open
-            if ()
+            if (client.getWidget(WidgetInfo.MULTI_SKILL_MENU) != null &&
+                    !client.getWidget(WidgetInfo.MULTI_SKILL_MENU).isHidden())
                 press();
         }
     }

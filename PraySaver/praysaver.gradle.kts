@@ -1,9 +1,7 @@
-//import ProjectVersions.rlVersion
-
 /*
  * Copyright (c) 2019 Owain van Brakel <https://github.com/Owain94>
  * Copyright (c) 2019 Ganom <https://github.com/Ganom>
- * Copyright (c) 2019 naki
+ * Copyright (c) 2020 weblue
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,22 +25,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "0.0.1"
+version = "0.0.2"
 
 project.extra["PluginName"] = "Pray Saver"
 project.extra["PluginDescription"] = "Save your pray while you slay"
-
-/*dependencies {
-    annotationProcessor(Libraries.lombok)
-    annotationProcessor(Libraries.pf4j)
-
-    compileOnly("com.openosrs:runelite-api:$rlVersion")
-    compileOnly("com.openosrs:runelite-client:$rlVersion")
-
-    compileOnly(Libraries.guice)
-    compileOnly(Libraries.lombok)
-    compileOnly(Libraries.pf4j)
-}*/
 
 tasks {
     jar {

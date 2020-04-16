@@ -12,10 +12,6 @@ import java.util.concurrent.Executors;
 import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.ChatMessageType;
-import net.runelite.api.Client;
-import net.runelite.api.GameState;
-import net.runelite.api.Varbits;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
@@ -76,7 +72,8 @@ public class PraySaver extends Plugin {
                     client.getLocalPlayer().getHealthRatio() == -1) {
                 toggle();
                 log.debug("PraySaver: toggling prayer off");
-            } else if (client.getLocalPlayer().getHealthRatio() > 0 &&
+            } else if (client.getBoostedSkillLevel(Skill.PRAYER) > 0 &&
+                    client.getLocalPlayer().getHealthRatio() > 0 &&
                     client.getVar(Varbits.QUICK_PRAYER) == 0 &&
                     config.bumMode()) {
                 toggle();

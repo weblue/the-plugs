@@ -1,7 +1,7 @@
 [
   {
     "projectUrl": "https://github.com/weblue/the-plugs",
-    "provider": "naki",
+    "provider": "weblue",
     "name": "Pray Saver",
     "description": "Save pray while you slay",
     "id": "praysaver-plugin",
@@ -12,6 +12,28 @@
         "version": "0.0.1",
         "url": "https://github.com/weblue/the-plugs/blob/master/release/praysaver-0.0.1.jar?raw=true",
         "requires": "0.0.1"
+      },
+      {
+        "date": "2020-04-16",
+        "sha512sum": "4e53801876aae16351c2ed4a9f1b558ccb4b59fa5f70928f4e5a509f1d0c1a75179ba45716080d3b17c503d71a879eeb80\n0d6f0e4a0fb1cad170e245f062426d",
+        "version": "0.0.2",
+        "url": "https://github.com/weblue/the-plugs/blob/master/release/praysaver-0.0.2.jar?raw=true",
+        "requires": "0.0.2"
+      }
+    ]
+  },
+  {
+    "projectUrl": "https://github.com/weblue/the-plugs",
+    "provider": "weblue",
+    "name": "Space Spam",
+    "description": "Welcome to the Space Spam, alright!",
+    "id": "spacespam-plugin",
+    "releases": [
+      {
+        "date": "2020-04-16",
+        "sha512sum": "a165c483837531411f56155cbee7dc8a7647ce0e914f7f8889bd35796ef54fa3b5200de49dee3b1894940b836569b05cb2\nda21813dc530af563b08b6ee1a693f",
+        "version": "0.0.1",
+        "url": "https://github.com/weblue/the-plugs/blob/master/release/spacespam-0.0.1.jar?raw=true"
       }
     ]
   }
