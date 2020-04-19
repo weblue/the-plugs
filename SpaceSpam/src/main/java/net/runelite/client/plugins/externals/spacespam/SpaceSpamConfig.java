@@ -16,31 +16,8 @@ import net.runelite.client.config.Title;
 public interface SpaceSpamConfig extends Config
 {
 
-	/*@ConfigTitleSection(
-			position = 1,
-			keyName = "mainConfig",
-			name = "Main Config",
-			description = ""
-	)
-	default Title mainConfig()
-	{
-		return new Title();
-	}
-
-	@ConfigItem(
-			keyName = "bumMode",
-			name = "Enable pray on enter combat",
-			description = "Makes it even lazier",
-			position = 1,
-			titleSection = "mainConfig"
-	)
-	default boolean bumMode()
-	{
-		return false;
-	}*/
-
 	@ConfigTitleSection(
-			position = 2,
+			position = 1,
 			keyName = "hotkeys",
 			name = "Hotkeys",
 			description = ""
@@ -61,4 +38,5 @@ public interface SpaceSpamConfig extends Config
 	{
 		return Keybind.NOT_SET;
 	}
+
 }

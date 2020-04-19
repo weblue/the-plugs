@@ -30,19 +30,7 @@
 version = "0.0.1"
 
 project.extra["PluginName"] = "Space Spam"
-project.extra["PluginDescription"] = "Spam space to do what you need while you afk"
-
-/*dependencies {
-    annotationProcessor(Libraries.lombok)
-    annotationProcessor(Libraries.pf4j)
-
-    compileOnly("com.openosrs:runelite-api:$rlVersion")
-    compileOnly("com.openosrs:runelite-client:$rlVersion")
-
-    compileOnly(Libraries.guice)
-    compileOnly(Libraries.lombok)
-    compileOnly(Libraries.pf4j)
-}*/
+project.extra["PluginDescription"] = "Everybody get up, it's time to spam now"
 
 tasks {
     jar {

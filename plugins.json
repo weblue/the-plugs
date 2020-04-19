@@ -14,8 +14,8 @@
         "requires": "0.0.1"
       },
       {
-        "date": "2020-04-16",
-        "sha512sum": "4e53801876aae16351c2ed4a9f1b558ccb4b59fa5f70928f4e5a509f1d0c1a75179ba45716080d3b17c503d71a879eeb80\n0d6f0e4a0fb1cad170e245f062426d",
+        "date": "2020-04-19",
+        "sha512sum": "151f9aae1e9e7b766836e5a5f3d54de49a0f520e82a7de0d8d36da80574c748176f0b4939614d0bc36678cf4ead22a2e42bcef8a779ae354265d37db0d11eac2 ",
         "version": "0.0.2",
         "url": "https://github.com/weblue/the-plugs/blob/master/release/praysaver-0.0.2.jar?raw=true",
         "requires": "0.0.2"
@@ -30,8 +30,8 @@
     "id": "spacespam-plugin",
     "releases": [
       {
-        "date": "2020-04-16",
-        "sha512sum": "a165c483837531411f56155cbee7dc8a7647ce0e914f7f8889bd35796ef54fa3b5200de49dee3b1894940b836569b05cb2\nda21813dc530af563b08b6ee1a693f",
+        "date": "2020-04-19",
+        "sha512sum": "e8847f5582404a935428d370cc280323f49b2de3b1e12e2fc60dcd2033de73a79b569059231f5e0a8f29d96377f85eb8f9fab58b5dbf1d4ffe53d7887fe800ba",
         "version": "0.0.1",
         "url": "https://github.com/weblue/the-plugs/blob/master/release/spacespam-0.0.1.jar?raw=true"
       }

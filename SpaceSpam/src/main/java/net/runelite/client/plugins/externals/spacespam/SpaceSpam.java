@@ -65,11 +65,10 @@ public class SpaceSpam extends Plugin {
 
     @Subscribe
     private void onGameTick(GameTick tick) {
-        if (running) {
-            //TODO hit space if dialog is open
-            if (client.getWidget(WidgetInfo.MULTI_SKILL_MENU) != null &&
-                    !client.getWidget(WidgetInfo.MULTI_SKILL_MENU).isHidden())
-                press();
+        if (running &&
+                client.getWidget(WidgetInfo.MULTI_SKILL_MENU) != null) {
+            //!client.getWidget(WidgetInfo.MULTI_SKILL_MENU).isHidden()) {
+            press();
         }
     }
 
@@ -84,12 +83,12 @@ public class SpaceSpam extends Plugin {
         }
     }
 
-    private void dispatchError(String error) {
-        String str = ColorUtil.wrapWithColorTag("Pray Saver", Color.MAGENTA)
-                + " has encountered an "
-                + ColorUtil.wrapWithColorTag("error", Color.RED)
-                + ": "
-                + error;
+    private void dispatchError(String msg) {
+        String str = ColorUtil.wrapWithColorTag("Space Jam: ", Color.MAGENTA)
+                //+ " has encountered an "
+                + ColorUtil.wrapWithColorTag(msg, Color.ORANGE);
+        //+ ": "
+        // + error;
 
         client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", str, null);
     }
@@ -97,9 +96,9 @@ public class SpaceSpam extends Plugin {
     private void press() {
         assert !client.isClientThread();
 
-        keyEvent(401, KeyEvent.VK_SPACE, ' ');
-        keyEvent(402, KeyEvent.VK_SPACE, ' ');
-        keyEvent(400, KeyEvent.VK_SPACE, ' ');
+        keyEvent(KeyEvent.KEY_PRESSED, KeyEvent.VK_SPACE, ' ');
+        keyEvent(KeyEvent.KEY_TYPED, KeyEvent.VK_UNDEFINED, ' ');
+        keyEvent(KeyEvent.KEY_RELEASED, KeyEvent.VK_SPACE, ' ');
     }
 
     private void keyEvent(int id, int key, char c) {
@@ -120,6 +119,7 @@ public class SpaceSpam extends Plugin {
         public void hotkeyPressed() {
             log.debug("PraySaver: hotkey pressed");
             running = !running;
+            dispatchError(Boolean.toString(running));
         }
     };
 }

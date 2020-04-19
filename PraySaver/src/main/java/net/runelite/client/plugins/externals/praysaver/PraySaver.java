@@ -12,6 +12,11 @@ import java.util.concurrent.Executors;
 import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.ChatMessageType;
+import net.runelite.api.Client;
+import net.runelite.api.GameState;
+import net.runelite.api.Skill;
+import net.runelite.api.Varbits;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
@@ -105,12 +110,12 @@ public class PraySaver extends Plugin {
         click(widget.getBounds());
     }
 
-    private void dispatchError(String error) {
-        String str = ColorUtil.wrapWithColorTag("Pray Saver", Color.MAGENTA)
-                + " has encountered an "
-                + ColorUtil.wrapWithColorTag("error", Color.RED)
-                + ": "
-                + error;
+    private void dispatchError(String msg) {
+        String str = ColorUtil.wrapWithColorTag("Pray Saver: ", Color.MAGENTA)
+                //+ " has encountered an "
+                + ColorUtil.wrapWithColorTag(msg, Color.ORANGE);
+        //+ ": "
+        //+ error;
 
         client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", str, null);
     }
@@ -173,6 +178,7 @@ public class PraySaver extends Plugin {
         public void hotkeyPressed() {
             log.debug("PraySaver: hotkey pressed");
             running = !running;
+            dispatchError(Boolean.toString(running));
         }
     };
 }
