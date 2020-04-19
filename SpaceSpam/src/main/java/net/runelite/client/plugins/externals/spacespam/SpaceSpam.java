@@ -84,7 +84,7 @@ public class SpaceSpam extends Plugin {
     }
 
     private void dispatchError(String msg) {
-        String str = ColorUtil.wrapWithColorTag("Space Jam: ", Color.MAGENTA)
+        String str = ColorUtil.wrapWithColorTag("Space Spam: ", Color.MAGENTA)
                 //+ " has encountered an "
                 + ColorUtil.wrapWithColorTag(msg, Color.ORANGE);
         //+ ": "
