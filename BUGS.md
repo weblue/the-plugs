@@ -1,11 +1,11 @@
-#Current bugs:
+# Current bugs:
 
-##PraySaver:
+## PraySaver:
   * needs hitsplat to enable quick pray on enter combat
-##SpaceSpam:
+## SpaceSpam:
   * resets running status on scenechange
   
-#TODO:
+# TODO:
 
-##SpaceSpam:
+## SpaceSpam:
   * bind quick pray to hotkey
