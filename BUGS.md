@@ -7,5 +7,7 @@
   
 # TODO:
 
-## SpaceSpam:
+## PraySaver:
   * bind quick pray to hotkey
+## SpaceSpam:
+  * investigate onWidgetLoaded instead of onGameTick widget != null
