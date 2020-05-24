@@ -10,6 +10,8 @@
 
 ## PraySaver:
   * bind quick pray to hotkey
+  * check to make sure no target before turning off pray
+  * turn on pray on target when enabling for combat
 ## SpaceSpam:
   * investigate onWidgetLoaded instead of onGameTick widget != null
 
