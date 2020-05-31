@@ -3,6 +3,7 @@
 ## PraySaver:
   * needs hitsplat to enable quick pray on enter combat
   * resets running status on scene changes
+  * check for target before turning off quick pray
 ## SpaceSpam:
   * resets running status on scenechange
   
