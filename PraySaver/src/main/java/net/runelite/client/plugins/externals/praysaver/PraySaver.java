@@ -74,13 +74,15 @@ public class PraySaver extends Plugin {
     private void onGameTick(GameTick tick) {
         if (running) {
             if (client.getVar(Varbits.QUICK_PRAYER) == 1 &&
-                    client.getLocalPlayer().getHealthRatio() == -1) {
+                    client.getLocalPlayer().getHealthRatio() == -1 &&
+                    client.getLocalPlayer().getInteracting() == null) {
                 toggle();
                 log.debug("PraySaver: toggling prayer off");
             } else if (client.getBoostedSkillLevel(Skill.PRAYER) > 0 &&
-                    client.getLocalPlayer().getHealthRatio() > 0 &&
+                    (client.getLocalPlayer().getHealthRatio() > 0 ||
+                    client.getLocalPlayer().getInteracting() != null) &&
                     client.getVar(Varbits.QUICK_PRAYER) == 0 &&
-                    config.bumMode()) {
+                config.bumMode()) {
                 toggle();
                 log.debug("PraySaver: toggling prayer on");
             }
@@ -111,11 +113,11 @@ public class PraySaver extends Plugin {
     }
 
     private void dispatchError(String msg) {
-        String str = ColorUtil.wrapWithColorTag("Pray Saver: ", Color.MAGENTA)
+        String str = ColorUtil.wrapWithColorTag("Pray Saver: ", Color.RED)
                 //+ " has encountered an "
-                + ColorUtil.wrapWithColorTag(msg, Color.ORANGE);
-        //+ ": "
-        //+ error;
+                + ColorUtil.wrapWithColorTag(msg, Color.BLACK);
+                //+ ": "
+                //+ error;
 
         client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", str, null);
     }

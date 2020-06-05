@@ -19,6 +19,13 @@
         "version": "0.0.2",
         "url": "https://github.com/weblue/the-plugs/blob/master/release/praysaver-0.0.2.jar?raw=true",
         "requires": "0.0.2"
+      },
+	  {
+        "date": "2020-04-19",
+        "sha512sum": "ab650648629675b39bcf2536e578392357c70f05551c50c13a68d83ed651642bf9fac65591d6a501a907887736af1eea5c14595fd146086e852f86ee259c965f",
+        "version": "0.0.3",
+        "url": "https://github.com/weblue/the-plugs/blob/master/release/praysaver-0.0.3.jar?raw=true",
+        "requires": "0.0.3"
       }
     ]
   },
