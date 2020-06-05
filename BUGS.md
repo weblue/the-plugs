@@ -6,7 +6,6 @@
 # TODO:
 
 ## PraySaver:
-  * bind quick pray to hotkey
   * add flick mode based on enemy attack timer
 ## SpaceSpam:
 
