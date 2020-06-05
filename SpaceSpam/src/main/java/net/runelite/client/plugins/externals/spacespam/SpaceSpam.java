@@ -14,6 +14,8 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.widgets.WidgetID;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -63,34 +65,44 @@ public class SpaceSpam extends Plugin {
         keyManager.unregisterKeyListener(hotkey);
     }
 
-    @Subscribe
+/*    @Subscribe
     private void onGameTick(GameTick tick) {
         if (running &&
                 client.getWidget(WidgetInfo.MULTI_SKILL_MENU) != null) {
-            //!client.getWidget(WidgetInfo.MULTI_SKILL_MENU).isHidden()) {
+                //!client.getWidget(WidgetInfo.MULTI_SKILL_MENU).isHidden()) {
+            press();
+        }
+    }*/
+
+    @Subscribe
+    private void onWidgetLoaded(WidgetLoaded event)
+    {
+        if (running &&
+                event.getGroupId() == WidgetID.MULTISKILL_MENU_GROUP_ID) {
             press();
         }
     }
 
 
-    @Subscribe
-    public void onGameStateChanged(GameStateChanged event) {
-        if (event.getGameState() != GameState.LOGGED_IN) {
-            keyManager.unregisterKeyListener(hotkey);
-            running = false;
-        } else {
-            keyManager.registerKeyListener(hotkey);
-        }
-    }
+//    @Subscribe
+//    public void onGameStateChanged(GameStateChanged event) {
+//        if (event.getGameState() != GameState.LOGGED_IN) {
+//            keyManager.unregisterKeyListener(hotkey);
+//            dispatchError("Game state change causing run to stop");
+//            running = false;
+//        } else {
+//            keyManager.registerKeyListener(hotkey);
+//        }
+//    }
 
     private void dispatchError(String msg) {
-        String str = ColorUtil.wrapWithColorTag("Space Spam: ", Color.MAGENTA)
+        String str = ColorUtil.wrapWithColorTag("Space Spam: ", Color.RED)
                 //+ " has encountered an "
-                + ColorUtil.wrapWithColorTag(msg, Color.ORANGE);
+                + ColorUtil.wrapWithColorTag(msg, Color.BLACK);
         //+ ": "
         // + error;
 
-        client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", str, null);
+        client.addChatMessage(ChatMessageType.PRIVATECHAT, "", str, null);
     }
 
     private void press() {
