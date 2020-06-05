@@ -17,10 +17,10 @@ public interface PraySaverConfig extends Config
 {
 
 	@ConfigTitleSection(
-			position = 1,
-			keyName = "mainConfig",
-			name = "Main Config",
-			description = ""
+		position = 1,
+		keyName = "mainConfig",
+		name = "Main Config",
+		description = ""
 	)
 	default Title mainConfig()
 	{
@@ -28,11 +28,11 @@ public interface PraySaverConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "bumMode",
-			name = "Enable pray on enter combat",
-			description = "Makes it even lazier",
-			position = 1,
-			titleSection = "mainConfig"
+		keyName = "bumMode",
+		name = "Enable pray on enter combat",
+		description = "Makes it even lazier",
+		position = 1,
+		titleSection = "mainConfig"
 	)
 	default boolean bumMode()
 	{
@@ -40,10 +40,10 @@ public interface PraySaverConfig extends Config
 	}
 
 	@ConfigTitleSection(
-			position = 2,
-			keyName = "hotkeys",
-			name = "Hotkeys",
-			description = ""
+		position = 2,
+		keyName = "hotkeys",
+		name = "Hotkeys",
+		description = ""
 	)
 	default Title hotkeys()
 	{
@@ -51,13 +51,24 @@ public interface PraySaverConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "hotkey",
-			name = "Toggle pray saver",
-			description = "",
-			position = 1,
-			titleSection = "hotkeys"
+		keyName = "hotkey",
+		name = "Toggle pray saver",
+		description = "",
+		position = 1,
+		titleSection = "hotkeys"
 	)
 	default Keybind hotkey()
+	{
+		return Keybind.NOT_SET;
+	}
+	@ConfigItem(
+			keyName = "quickPray",
+			name = "Toggle quick pray",
+			description = "",
+			position = 2,
+			titleSection = "hotkeys"
+	)
+	default Keybind quickPray()
 	{
 		return Keybind.NOT_SET;
 	}

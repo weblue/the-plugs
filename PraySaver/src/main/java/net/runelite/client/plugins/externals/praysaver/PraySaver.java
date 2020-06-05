@@ -60,6 +60,7 @@ public class PraySaver extends Plugin {
         executor = Executors.newFixedThreadPool(1);
         if (client.getGameState() == GameState.LOGGED_IN) {
             keyManager.registerKeyListener(hotkey);
+            keyManager.registerKeyListener(qpHotkey);
         }
     }
 
@@ -68,6 +69,7 @@ public class PraySaver extends Plugin {
         executor.shutdown();
         running = false;
         keyManager.unregisterKeyListener(hotkey);
+        keyManager.unregisterKeyListener(qpHotkey);
     }
 
     @Subscribe
@@ -80,9 +82,9 @@ public class PraySaver extends Plugin {
                 log.debug("PraySaver: toggling prayer off");
             } else if (client.getBoostedSkillLevel(Skill.PRAYER) > 0 &&
                     (client.getLocalPlayer().getHealthRatio() > 0 ||
-                    client.getLocalPlayer().getInteracting() != null) &&
+                            client.getLocalPlayer().getInteracting() != null) &&
                     client.getVar(Varbits.QUICK_PRAYER) == 0 &&
-                config.bumMode()) {
+                    config.bumMode()) {
                 toggle();
                 log.debug("PraySaver: toggling prayer on");
             }
@@ -94,9 +96,11 @@ public class PraySaver extends Plugin {
     public void onGameStateChanged(GameStateChanged event) {
         if (event.getGameState() != GameState.LOGGED_IN) {
             keyManager.unregisterKeyListener(hotkey);
+            keyManager.unregisterKeyListener(qpHotkey);
             running = false;
         } else {
             keyManager.registerKeyListener(hotkey);
+            keyManager.registerKeyListener(qpHotkey);
         }
     }
 
@@ -116,8 +120,8 @@ public class PraySaver extends Plugin {
         String str = ColorUtil.wrapWithColorTag("Pray Saver: ", Color.RED)
                 //+ " has encountered an "
                 + ColorUtil.wrapWithColorTag(msg, Color.BLACK);
-                //+ ": "
-                //+ error;
+        //+ ": "
+        //+ error;
 
         client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", str, null);
     }
@@ -181,6 +185,14 @@ public class PraySaver extends Plugin {
             log.debug("PraySaver: hotkey pressed");
             running = !running;
             dispatchError(Boolean.toString(running));
+        }
+    };
+
+    private final HotkeyListener qpHotkey = new HotkeyListener(() -> config.quickPray()) {
+        @Override
+        protected void hotkeyPressed() {
+            log.debug("PraySaver: Quick pray bind pressed");
+            toggle();
         }
     };
 }
