@@ -5,14 +5,14 @@ import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.Keybind;
 
-@ConfigGroup("SpaceSpam")
+@ConfigGroup("spacespam")
 public interface SpaceSpamConfig extends Config
 {
 	@ConfigItem(
 			keyName = "hotkey",
 			name = "Toggle space spam",
 			description = "",
-			position = 0
+			position = 1
 	)
 	default Keybind hotkey()
 	{

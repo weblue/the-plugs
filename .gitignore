@@ -68,7 +68,7 @@ shayzieninfirmary/*
 stealingartefacts/*
 thieving/*
 LICENSE
-build/*
+*/build/*
 buildSrc
 config
 gradle
@@ -77,3 +77,4 @@ gradlew
 gradlew.bat
 settings.gradle.kts
 build.gradle.kts
+*/bin/*

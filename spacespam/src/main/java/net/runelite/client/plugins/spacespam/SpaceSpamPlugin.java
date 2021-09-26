@@ -45,6 +45,15 @@ public class SpaceSpamPlugin extends Plugin {
     private boolean running = false;
     private ExecutorService executor;
 
+    private final HotkeyListener hotkey = new HotkeyListener(() -> config.hotkey()) {
+        @Override
+        public void hotkeyPressed() {
+            log.info("Toggled space spam");
+            running = !running;
+            dispatchError(running ? "Space spam enabled" : "Space spam disabled");
+        }
+    };
+
     @Provides
     SpaceSpamConfig provideConfig(ConfigManager manager) {
         return manager.getConfig(SpaceSpamConfig.class);
@@ -52,6 +61,7 @@ public class SpaceSpamPlugin extends Plugin {
 
     @Override
     protected void startUp() {
+        log.info("Space spam started");
         executor = Executors.newFixedThreadPool(1);
         if (client.getGameState() == GameState.LOGGED_IN) {
             keyManager.registerKeyListener(hotkey);
@@ -60,6 +70,7 @@ public class SpaceSpamPlugin extends Plugin {
 
     @Override
     protected void shutDown() {
+        log.info("Space spam closing");
         executor.shutdown();
         running = false;
         keyManager.unregisterKeyListener(hotkey);
@@ -125,12 +136,4 @@ public class SpaceSpamPlugin extends Plugin {
 
         client.getCanvas().dispatchEvent(e);
     }
-
-    private final HotkeyListener hotkey = new HotkeyListener(() -> config.hotkey()) {
-        @Override
-        public void hotkeyPressed() {
-            running = !running;
-            dispatchError(Boolean.toString(running));
-        }
-    };
 }
