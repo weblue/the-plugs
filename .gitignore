@@ -72,9 +72,4 @@ LICENSE
 buildSrc
 config
 gradle
-gradle.properties
-gradlew
-gradlew.bat
-settings.gradle.kts
-build.gradle.kts
 */bin/*
