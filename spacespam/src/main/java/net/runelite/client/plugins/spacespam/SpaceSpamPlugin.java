@@ -22,7 +22,6 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginType;
 import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.HotkeyListener;
 import org.pf4j.Extension;
@@ -31,10 +30,11 @@ import org.pf4j.Extension;
 @PluginDescriptor(
         name = "Space Spam",
         description = "Everybody get up, it's time to spam now",
-        type = PluginType.SKILLING
+        enabledByDefault = false,
+        tags = {"automation, hotkey, skilling"}
 )
 @Slf4j
-public class SpaceSpam extends Plugin {
+public class SpaceSpamPlugin extends Plugin {
     @Inject
     private Client client;
     @Inject
@@ -129,7 +129,6 @@ public class SpaceSpam extends Plugin {
     private final HotkeyListener hotkey = new HotkeyListener(() -> config.hotkey()) {
         @Override
         public void hotkeyPressed() {
-            log.debug("PraySaver: hotkey pressed");
             running = !running;
             dispatchError(Boolean.toString(running));
         }

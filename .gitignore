@@ -55,19 +55,20 @@ Temporary Items
 
 # Directories from openosrs plugins
 .github
-betterantidrag
-betterprofiles
-betterroguesden
-friendtagging
-grounditemsextended
-highalchemy
-maxhit
-playerindicatorsextended
-reminders
-shayzieninfirmary
-stealingartefacts
-thieving
+betterantidrag/*
+betterprofiles/*
+betterroguesden/*
+friendtagging/*
+grounditemsextended/*
+highalchemy/*
+maxhit/*
+playerindicatorsextended/*
+reminders/*
+shayzieninfirmary/*
+stealingartefacts/*
+thieving/*
 LICENSE
+build/*
 buildSrc
 config
 gradle

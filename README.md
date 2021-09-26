@@ -7,5 +7,7 @@ This is a collection of officially supported plugins. This is the default repo u
 Gradle commands:
 
 ```
-./gradlew clean build copyDeps publishToMavenLocal -PreleaseToExternalmanager=spacespam -x tests
+./gradlew clean build copyDeps publishToMavenLocal -PreleaseToExternalmanager=spacespam -x tests -x checkStyleMain -x checkStyleTest
 ```
+
+add includes to settings.gradle.kts
