@@ -94,7 +94,6 @@ public class SpaceSpamPlugin extends Plugin {
         }
     }
 
-
 //    @Subscribe
 //    public void onGameStateChanged(GameStateChanged event) {
 //        if (event.getGameState() != GameState.LOGGED_IN) {
@@ -109,7 +108,7 @@ public class SpaceSpamPlugin extends Plugin {
     private void dispatchError(String msg) {
         String str = ColorUtil.wrapWithColorTag("Space Spam: ", Color.RED)
                 //+ " has encountered an "
-                + ColorUtil.wrapWithColorTag(msg, Color.BLACK);
+                + ColorUtil.wrapWithColorTag(msg, Color.RED);
         //+ ": "
         // + error;
 
