@@ -22,8 +22,11 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
 import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.HotkeyListener;
+import net.runelite.client.util.ImageUtil;
+
 import org.pf4j.Extension;
 
 @Extension
@@ -41,6 +44,8 @@ public class SpaceSpamPlugin extends Plugin {
     private KeyManager keyManager;
     @Inject
     private SpaceSpamConfig config;
+	@Inject
+	private InfoBoxManager infoBoxManager;
 
     private boolean running = false;
     private ExecutorService executor;
@@ -50,9 +55,18 @@ public class SpaceSpamPlugin extends Plugin {
         public void hotkeyPressed() {
             log.info("Toggled space spam");
             running = !running;
-            dispatchError(running ? "Space spam enabled" : "Space spam disabled");
+            toggleInfoBox(running);
+            //dispatchError(running ? "Space spam enabled" : "Space spam disabled");
         }
     };
+
+    void toggleInfoBox(boolean show) {
+        if (show) {
+            infoBoxManager.addInfoBox(new SpaceSpamIndicator(ImageUtil.loadImageResource(getClass(), "buffed.png"), this));
+        } else {
+            infoBoxManager.removeIf(t -> t instanceof SpaceSpamIndicator);
+        }
+    }
 
     @Provides
     SpaceSpamConfig provideConfig(ConfigManager manager) {
@@ -70,6 +84,7 @@ public class SpaceSpamPlugin extends Plugin {
     protected void shutDown() {
         log.info("Space spam closing");
         executor.shutdown();
+        infoBoxManager.removeIf(t -> t instanceof SpaceSpamIndicator);
         running = false;
         keyManager.unregisterKeyListener(hotkey);
     }
