@@ -63,9 +63,7 @@ public class SpaceSpamPlugin extends Plugin {
     protected void startUp() {
         log.info("Space spam started");
         executor = Executors.newFixedThreadPool(1);
-        if (client.getGameState() == GameState.LOGGED_IN) {
-            keyManager.registerKeyListener(hotkey);
-        }
+        keyManager.registerKeyListener(hotkey);
     }
 
     @Override
@@ -106,13 +104,13 @@ public class SpaceSpamPlugin extends Plugin {
 //    }
 
     private void dispatchError(String msg) {
-        String str = ColorUtil.wrapWithColorTag("Space Spam: ", Color.RED)
-                //+ " has encountered an "
-                + ColorUtil.wrapWithColorTag(msg, Color.RED);
+        String str = //ColorUtil.wrapWithColorTag("Space Spam: ", Color.RED)
+                //+ " has encountered an " + 
+                ColorUtil.wrapWithColorTag(msg, Color.RED);
         //+ ": "
         // + error;
 
-        client.addChatMessage(ChatMessageType.PRIVATECHAT, "", str, null);
+        client.addChatMessage(ChatMessageType.PRIVATECHAT, "Space Spam", str, null);
     }
 
     private void press() {
