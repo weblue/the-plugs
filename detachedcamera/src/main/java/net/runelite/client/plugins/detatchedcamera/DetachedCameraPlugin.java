@@ -95,7 +95,7 @@ public class DetachedCameraPlugin extends Plugin {
    @Subscribe
    public void onGameStateChanged(GameStateChanged event) {
         // If det camera enabled and client is world hopping
-        if (event.getOculusOrbState() != 0 && event.getGameState().equals(GameState.HOPPING)) {
+        if (event.getGameState().equals(GameState.HOPPING) && client.getOculusOrbState() != 0) {
             doIt = true;
         }
    }
