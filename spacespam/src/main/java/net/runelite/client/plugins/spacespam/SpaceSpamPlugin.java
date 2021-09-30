@@ -53,16 +53,18 @@ public class SpaceSpamPlugin extends Plugin {
     private final HotkeyListener hotkey = new HotkeyListener(() -> config.hotkey()) {
         @Override
         public void hotkeyPressed() {
-            log.info("Toggled space spam");
             running = !running;
             toggleInfoBox(running);
+            log.info(running ? "Space spam enabled" : "Space spam disabled");
             //dispatchError(running ? "Space spam enabled" : "Space spam disabled");
         }
     };
 
     void toggleInfoBox(boolean show) {
         if (show) {
-            infoBoxManager.addInfoBox(new SpaceSpamIndicator(ImageUtil.loadImageResource(getClass(), "buffed.png"), this));
+            infoBoxManager.addInfoBox(
+                new SpaceSpamIndicator(ImageUtil.loadImageResource(getClass(), "buffed.png"), this)
+            );
         } else {
             infoBoxManager.removeIf(t -> t instanceof SpaceSpamIndicator);
         }
@@ -75,34 +77,22 @@ public class SpaceSpamPlugin extends Plugin {
 
     @Override
     protected void startUp() {
-        log.info("Space spam started");
         executor = Executors.newFixedThreadPool(1);
         keyManager.registerKeyListener(hotkey);
     }
 
     @Override
     protected void shutDown() {
-        log.info("Space spam closing");
         executor.shutdown();
         infoBoxManager.removeIf(t -> t instanceof SpaceSpamIndicator);
         running = false;
         keyManager.unregisterKeyListener(hotkey);
     }
 
-/*    @Subscribe
-    private void onGameTick(GameTick tick) {
-        if (running &&
-                client.getWidget(WidgetInfo.MULTI_SKILL_MENU) != null) {
-                //!client.getWidget(WidgetInfo.MULTI_SKILL_MENU).isHidden()) {
-            press();
-        }
-    }*/
-
     @Subscribe
     private void onWidgetLoaded(WidgetLoaded event)
     {
-        if (running &&
-                event.getGroupId() == WidgetID.MULTISKILL_MENU_GROUP_ID) {
+        if (running && event.getGroupId() == WidgetID.MULTISKILL_MENU_GROUP_ID) {
             press();
         }
     }
@@ -119,12 +109,7 @@ public class SpaceSpamPlugin extends Plugin {
 //    }
 
     private void dispatchError(String msg) {
-        String str = //ColorUtil.wrapWithColorTag("Space Spam: ", Color.RED)
-                //+ " has encountered an " + 
-                ColorUtil.wrapWithColorTag(msg, Color.RED);
-        //+ ": "
-        // + error;
-
+        String str = ColorUtil.wrapWithColorTag(msg, Color.RED);
         client.addChatMessage(ChatMessageType.PRIVATECHAT, "Space Spam", str, null);
     }
 
@@ -137,14 +122,8 @@ public class SpaceSpamPlugin extends Plugin {
     }
 
     private void keyEvent(int id, int key, char c) {
-        KeyEvent e = new KeyEvent(
-                client.getCanvas(),
-                id,
-                System.currentTimeMillis(),
-                0,
-                key,
-                c
-        );
+        KeyEvent e = 
+            new KeyEvent(client.getCanvas(), id, System.currentTimeMillis(), 0, key, c);
 
         client.getCanvas().dispatchEvent(e);
     }

@@ -97,6 +97,7 @@ public class DetachedCameraPlugin extends Plugin {
         // If det camera enabled and client is world hopping
         if (event.getGameState().equals(GameState.HOPPING) && client.getOculusOrbState() != 0) {
             doIt = true;
+            log.info("bouta do it");
         }
    }
 
@@ -109,9 +110,11 @@ public class DetachedCameraPlugin extends Plugin {
         if (doIt) {
             // reset camera
             // client.setOculusOrbState(0);
-            // client.setOculusOrbState(1);
+            client.setOculusOrbState(1);
             client.setOculusOrbFocalPointX(oculusX);
             client.setOculusOrbFocalPointY(oculusY);
+
+            log.info("doin it");
 
             doIt = false;
         }
