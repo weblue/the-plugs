@@ -97,27 +97,25 @@ public class DetachedCameraPlugin extends Plugin {
         // If det camera enabled and client is world hopping
         if (event.getGameState().equals(GameState.HOPPING) && client.getOculusOrbState() != 0) {
             doIt = true;
-            log.info("bouta do it");
         }
    }
 
    @Subscribe
    public void onGameTick(GameTick tick) {
-        oculusX = client.getOculusOrbFocalPointX();
-        oculusY = client.getOculusOrbFocalPointY();
-
         // onGameTick implies game is active again
         if (doIt) {
             // reset camera
             // client.setOculusOrbState(0);
             client.setOculusOrbState(1);
+
             client.setOculusOrbFocalPointX(oculusX);
             client.setOculusOrbFocalPointY(oculusY);
 
-            log.info("doin it");
-
             doIt = false;
         }
+
+        oculusX = client.getOculusOrbFocalPointX();
+        oculusY = client.getOculusOrbFocalPointY();
    }
 
     private void dispatchError(String msg) {
