@@ -38,6 +38,7 @@ rootProject.name = "Nader Plugins"
 // include(":stealingartefacts")
 // include(":thieving")
 include(":spacespam")
+include(":detachedcamera")
 
 for (project in rootProject.children) {
     project.apply {
