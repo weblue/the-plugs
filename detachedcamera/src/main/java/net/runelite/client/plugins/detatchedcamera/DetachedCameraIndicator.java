@@ -14,7 +14,7 @@ public class DetachedCameraIndicator extends InfoBox{
 
     @Override
     public String getText() {
-        return "Orb";
+        return "Det Cam";
     }
 
     @Override

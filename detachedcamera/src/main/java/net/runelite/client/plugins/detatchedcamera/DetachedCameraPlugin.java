@@ -16,6 +16,7 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.WidgetID;
+import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -26,6 +27,7 @@ import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
 import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.HotkeyListener;
 import net.runelite.client.util.ImageUtil;
+import net.runelite.client.config.Keybind;
 
 import org.pf4j.Extension;
 
@@ -51,8 +53,9 @@ public class DetachedCameraPlugin extends Plugin {
     private int oculusY;
 
     private boolean doIt;
+    private boolean chattingState = false;
 
-    private final HotkeyListener hotkey = new HotkeyListener(() -> config.hotkey()) {
+    private final HotkeyListener cameraHotkey = new HotkeyListener(() -> config.hotkey()) {
         @Override
         public void hotkeyPressed() {
             log.info("Toggled detached camera");
@@ -64,7 +67,36 @@ public class DetachedCameraPlugin extends Plugin {
                 client.setOculusOrbNormalSpeed(12);
             }
             //toggleInfoBox(client.getOculusOrbState() != 0);
-            dispatchError(client.getOculusOrbState() != 0 ? "Detached cam enabled" : "Detached cam disabled");
+            //dispatchError(client.getOculusOrbState() != 0 ? "Detached cam enabled" : "Detached cam disabled");
+        }
+    };
+
+    //FIX SENDING CHAT MESSAGES AFTER
+    //TODO check key remapping config setting for enter to chat, instead of checking for explicit string
+    //TODO do this functionality when pin interface pops up or choice dialog
+    //TODO fix when user escapes or backspaces out of chat
+    private final HotkeyListener chatHotkey = new HotkeyListener(() -> new Keybind(10, 0)) {
+        @Override
+        public void hotkeyPressed() {
+            Widget chatbox = client.getWidget(WidgetInfo.CHATBOX_INPUT);
+
+            if (/*!chattingState && */client.getOculusOrbState() != 0 && chatbox != null && chatbox.getText().contains("Press Enter to Chat...")) {
+                // User is pressing enter and has key remapping enabled
+                chattingState = true;
+
+                oculusX = client.getOculusOrbFocalPointX();
+                oculusY = client.getOculusOrbFocalPointY();
+                client.setOculusOrbState(0);
+            } else if (chattingState && client.getOculusOrbState() == 0) {
+                // User is pressing enter to send and exiting chat
+                chattingState = false;
+
+                client.setOculusOrbState(1);
+                client.setOculusOrbFocalPointX(oculusX);
+                client.setOculusOrbFocalPointY(oculusY);
+            } else if (chattingState) {
+                chattingState = false;
+            }
         }
     };
 
@@ -83,13 +115,15 @@ public class DetachedCameraPlugin extends Plugin {
 
     @Override
     protected void startUp() {
-        keyManager.registerKeyListener(hotkey);
+        keyManager.registerKeyListener(cameraHotkey);
+        keyManager.registerKeyListener(chatHotkey);
     }
 
     @Override
     protected void shutDown() {
         infoBoxManager.removeIf(t -> t instanceof DetachedCameraIndicator);
-        keyManager.unregisterKeyListener(hotkey);
+        keyManager.unregisterKeyListener(cameraHotkey);
+        keyManager.unregisterKeyListener(chatHotkey);
     }
 
    @Subscribe
@@ -98,14 +132,10 @@ public class DetachedCameraPlugin extends Plugin {
         if (event.getGameState().equals(GameState.HOPPING) && client.getOculusOrbState() != 0) {
             doIt = true;
         }
-   }
-
-   @Subscribe
-   public void onGameTick(GameTick tick) {
-        // onGameTick implies game is active again
-        if (doIt) {
+        
+        // Wait until game is responsive
+        if (doIt && event.getGameState().equals(GameState.LOGGED_IN)) {
             // reset camera
-            // client.setOculusOrbState(0);
             client.setOculusOrbState(1);
 
             client.setOculusOrbFocalPointX(oculusX);
@@ -113,9 +143,14 @@ public class DetachedCameraPlugin extends Plugin {
 
             doIt = false;
         }
+   }
 
-        oculusX = client.getOculusOrbFocalPointX();
-        oculusY = client.getOculusOrbFocalPointY();
+   @Subscribe
+   public void onGameTick(GameTick tick) {
+       if (client.getOculusOrbState() != 0) {
+            oculusX = client.getOculusOrbFocalPointX();
+            oculusY = client.getOculusOrbFocalPointY();
+       }
    }
 
     private void dispatchError(String msg) {
