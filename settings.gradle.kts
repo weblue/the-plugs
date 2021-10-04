@@ -39,6 +39,8 @@ rootProject.name = "Nader Plugins"
 // include(":thieving")
 include(":spacespam")
 include(":detachedcamera")
+include(":OneClick")
+include(":AutoClicker")
 
 for (project in rootProject.children) {
     project.apply {

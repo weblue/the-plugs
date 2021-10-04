@@ -4,8 +4,6 @@ import com.google.inject.Provides;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +14,6 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
-import net.runelite.api.events.WidgetLoaded;
-import net.runelite.api.widgets.WidgetID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
@@ -29,7 +25,6 @@ import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
 import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.HotkeyListener;
 import net.runelite.client.util.ImageUtil;
-import net.runelite.client.config.Keybind;
 import net.runelite.client.input.KeyListener;
 import net.runelite.api.VarClientStr;
 
