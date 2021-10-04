@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019 Owain van Brakel <https://github.com/Owain94>
- * Copyright (c) 2019 Ganom <https://github.com/Ganom>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,10 +23,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "6.1.2"
+version = "1.0.0"
 
-project.extra["PluginName"] = "AutoClicker"
-project.extra["PluginDescription"] = "What more is there to say?"
+project.extra["PluginName"] = "Wildy Auto Hop"
+project.extra["PluginDescription"] = "Automatically hops away from people"
+
+dependencies {
+    annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.12")
+    annotationProcessor(group = "org.pf4j", name = "pf4j", version = "3.2.0")
+}
 
 tasks {
     jar {

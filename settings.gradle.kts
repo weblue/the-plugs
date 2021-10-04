@@ -25,22 +25,13 @@
 
 rootProject.name = "Nader Plugins"
 
-// include(":betterantidrag")
-// include(":betterprofiles")
-// include(":betterroguesden")
-// include(":friendtagging")
-// include(":grounditemsextended")
-// include(":highalchemy")
-// include(":maxhit")
-// include(":playerindicatorsextended")
-// include(":reminders")
-// include(":shayzieninfirmary")
-// include(":stealingartefacts")
-// include(":thieving")
 include(":spacespam")
 include(":detachedcamera")
 include(":OneClick")
 include(":AutoClicker")
+include(":WildyAutoHop")
+//include(":chinglassblow")
+//include(":CustomSwapper")
 
 for (project in rootProject.children) {
     project.apply {

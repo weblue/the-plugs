@@ -84,6 +84,7 @@ public class DetachedCameraPlugin extends Plugin {
 
     @Override
     protected void startUp() {
+        client.setComplianceValue("orbInteraction", true);
         keyManager.registerKeyListener(cameraHotkey);
         keyManager.registerKeyListener(inputListener);
     }
@@ -91,6 +92,7 @@ public class DetachedCameraPlugin extends Plugin {
     @Override
     protected void shutDown() {
         infoBoxManager.removeIf(t -> t instanceof DetachedCameraIndicator);
+        client.setComplianceValue("orbInteraction", false);
         keyManager.unregisterKeyListener(cameraHotkey);
         keyManager.unregisterKeyListener(inputListener);
     }

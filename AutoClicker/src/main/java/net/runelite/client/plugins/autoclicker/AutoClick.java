@@ -13,6 +13,9 @@ import javax.inject.Inject;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import org.jetbrains.annotations.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
@@ -24,7 +27,6 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.externals.utils.ExtUtils;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.HotkeyListener;
 import org.pf4j.Extension;
@@ -32,7 +34,7 @@ import org.pf4j.Extension;
 @Extension
 @PluginDescriptor(
 	name = "Auto Clicker",
-	tags = "ganom",
+	tags = "automation",
 	enabledByDefault = false
 )
 @Slf4j
@@ -52,9 +54,6 @@ public class AutoClick extends Plugin
 
 	@Inject
 	private KeyManager keyManager;
-
-	@Inject
-	private ExtUtils extUtils;
 
 	private ExecutorService executorService;
 	private Point point;
@@ -123,7 +122,7 @@ public class AutoClick extends Plugin
 						break;
 					}
 
-					extUtils.click(point);
+					click(point);
 
 					try
 					{
@@ -138,6 +137,38 @@ public class AutoClick extends Plugin
 		}
 	};
 
+	public void click(Point p)
+	{
+		assert !client.isClientThread();
+
+		if (client.isStretchedEnabled())
+		{
+			final Dimension stretched = client.getStretchedDimensions();
+			final Dimension real = client.getRealDimensions();
+			final double width = (stretched.width / real.getWidth());
+			final double height = (stretched.height / real.getHeight());
+			final Point point = new Point((int) (p.getX() * width), (int) (p.getY() * height));
+			mouseEvent(501, point);
+			mouseEvent(502, point);
+			mouseEvent(500, point);
+			return;
+		}
+		mouseEvent(501, p);
+		mouseEvent(502, p);
+		mouseEvent(500, p);
+	}
+
+	private void mouseEvent(int id, @NotNull Point point)
+	{
+		MouseEvent e = new MouseEvent(
+				client.getCanvas(), id,
+				System.currentTimeMillis(),
+				0, point.getX(), point.getY(),
+				1, false, 1
+		);
+
+		client.getCanvas().dispatchEvent(e);
+	}
 
 	/**
 	 * Generate a gaussian random (average at 0.0, std dev of 1.0)

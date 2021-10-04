@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019 Owain van Brakel <https://github.com/Owain94>
- * Copyright (c) 2019 Ganom <https://github.com/Ganom>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,10 +23,18 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "6.1.2"
+plugins {
+    kotlin("kapt")
+}
 
-project.extra["PluginName"] = "AutoClicker"
-project.extra["PluginDescription"] = "What more is there to say?"
+version = "0.0.8"
+
+project.extra["PluginName"] = "Chin glass blow"
+project.extra["PluginDescription"] = "Automatically selects the product to glassblow"
+
+dependencies {
+    kapt(group = "org.pf4j", name = "pf4j", version = "3.2.0")
+}
 
 tasks {
     jar {

@@ -142,6 +142,21 @@ subprojects {
             exclude("**/RoomType.java")
         }
 
+        withType<Jar> {
+            doLast {
+                copy {
+                    from("./build/libs/")
+                    into("../release/")
+                }
+
+                val externalManagerDirectory: String = project.findProperty("externalManagerDirectory")?.toString() ?: System.getProperty("user.home") + "\\.openosrs\\plugins"
+                copy {
+                    from("./build/libs/")
+                    into(externalManagerDirectory)
+                }
+            }
+        }
+
         register<Copy>("copyDeps") {
             into("./build/deps/")
             from(configurations["runtimeClasspath"])
