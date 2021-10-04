@@ -1,16 +1,16 @@
-package net.runelite.client.plugins.spacespam;
+package net.runelite.client.plugins.detachedcamera;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.Keybind;
 
-@ConfigGroup("spacespam")
-public interface SpaceSpamConfig extends Config
+@ConfigGroup("detachedcamera")
+public interface DetachedCameraConfig extends Config
 {
 	@ConfigItem(
 			keyName = "hotkey",
-			name = "Toggle space spam",
+			name = "Toggle camera mode",
 			description = "",
 			position = 1
 	)

@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.spacespam;
+package net.runelite.client.plugins.detachedcamera;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -6,20 +6,20 @@ import java.awt.image.BufferedImage;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.ui.overlay.infobox.InfoBox;
 
-public class SpaceSpamIndicator extends InfoBox{
+public class DetachedCameraIndicator extends InfoBox{
 
-    public SpaceSpamIndicator(BufferedImage image, Plugin plugin) {
+    public DetachedCameraIndicator(BufferedImage image, Plugin plugin) {
         super(image, plugin);
     }
 
     @Override
     public String getText() {
-        return "Sp^2";
+        return "Det Cam";
     }
 
     @Override
     public Color getTextColor() {
-        return Color.WHITE;
+        return Color.CYAN;
     }
     
 }
