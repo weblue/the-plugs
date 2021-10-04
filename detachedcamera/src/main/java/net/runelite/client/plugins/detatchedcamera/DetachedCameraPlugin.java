@@ -9,6 +9,8 @@ import java.util.concurrent.Executors;
 import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
+import com.google.common.base.Strings;
+import net.runelite.api.VarClientInt;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
@@ -29,6 +31,7 @@ import net.runelite.client.util.HotkeyListener;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.input.KeyListener;
+import net.runelite.api.VarClientStr;
 
 import org.pf4j.Extension;
 
@@ -53,6 +56,7 @@ public class DetachedCameraPlugin extends Plugin {
 
     private boolean doIt;
     boolean chattingState = false;
+    private boolean waitOnDialogs = false;
 
     private final HotkeyListener cameraHotkey = new HotkeyListener(() -> config.hotkey()) {
         @Override
@@ -65,35 +69,12 @@ public class DetachedCameraPlugin extends Plugin {
                 client.setOculusOrbState(0);
                 client.setOculusOrbNormalSpeed(12);
             }
-            // toggleInfoBox(client.getOculusOrbState() != 0);
+
+            toggleInfoBox(client.getOculusOrbState() != 0);
             // dispatchError(client.getOculusOrbState() != 0 ? "Detached cam enabled" :
             // "Detached cam disabled");
         }
     };
-    // TODO do this functionality when pin interface pops up or choice dialog
-    // TODO check key remapping config setting for enter to chat, instead of
-    // checking for explicit string
-    // TODO fix when user escapes or backspaces out of chat
-    /*
-     * private final HotkeyListener chatHotkey = new HotkeyListener(() -> new
-     * Keybind(10, 0)) {
-     * 
-     * @Override public void hotkeyPressed() { Widget chatbox =
-     * client.getWidget(WidgetInfo.CHATBOX_INPUT);
-     * 
-     * if (client.getOculusOrbState() != 0 && chatbox != null &&
-     * chatbox.getText().contains("Press Enter to Chat...")) { // User is pressing
-     * enter and has key remapping enabled chattingState = true;
-     * 
-     * oculusX = client.getOculusOrbFocalPointX(); oculusY =
-     * client.getOculusOrbFocalPointY(); client.setOculusOrbState(0); } else if
-     * (chattingState && client.getOculusOrbState() == 0) { // User is pressing
-     * enter to send and exiting chat chattingState = false;
-     * 
-     * client.setOculusOrbState(1); client.setOculusOrbFocalPointX(oculusX);
-     * client.setOculusOrbFocalPointY(oculusY); } else if (chattingState) { // User
-     * has somehow turned detached back on chattingState = false; } } };
-     */
 
     void toggleInfoBox(boolean show) {
         if (show) {
@@ -112,7 +93,6 @@ public class DetachedCameraPlugin extends Plugin {
     @Override
     protected void startUp() {
         keyManager.registerKeyListener(cameraHotkey);
-        // keyManager.registerKeyListener(chatHotkey);
         keyManager.registerKeyListener(inputListener);
     }
 
@@ -120,7 +100,6 @@ public class DetachedCameraPlugin extends Plugin {
     protected void shutDown() {
         infoBoxManager.removeIf(t -> t instanceof DetachedCameraIndicator);
         keyManager.unregisterKeyListener(cameraHotkey);
-        // keyManager.unregisterKeyListener(chatHotkey);
         keyManager.unregisterKeyListener(inputListener);
     }
 
@@ -134,10 +113,7 @@ public class DetachedCameraPlugin extends Plugin {
         // Wait until game is responsive
         if (doIt && event.getGameState().equals(GameState.LOGGED_IN)) {
             // reset camera
-            client.setOculusOrbState(1);
-
-            client.setOculusOrbFocalPointX(oculusX);
-            client.setOculusOrbFocalPointY(oculusY);
+            enable();
 
             doIt = false;
         }
@@ -149,11 +125,56 @@ public class DetachedCameraPlugin extends Plugin {
             oculusX = client.getOculusOrbFocalPointX();
             oculusY = client.getOculusOrbFocalPointY();
         }
+
+        //TODO Fix this
+        if (dialogsOpen()) {
+            waitOnDialogs = true;
+
+            log.info("dialogs are open");
+            pause();
+        } else if (!dialogsOpen() && waitOnDialogs) {
+            waitOnDialogs = false;
+
+            log.info("dialog closed, resuming");
+
+            enable();
+        }
     }
 
     private void dispatchError(String msg) {
         String str = ColorUtil.wrapWithColorTag(msg, Color.RED);
         client.addChatMessage(ChatMessageType.PRIVATECHAT, this.getClass().getSimpleName(), str, null);
+    }
+    
+    private boolean dialogsOpen()
+	{
+        if (client.getWidget(WidgetInfo.BANK_PIN_CONTAINER) != null ||
+            client.getWidget(WidgetInfo.BANK_PIN_CONTAINER).isSelfHidden()) {
+            return true;
+        }
+
+		Widget chatboxParent = client.getWidget(WidgetInfo.CHATBOX_PARENT);
+		if (chatboxParent == null || chatboxParent.getOnKeyListener() == null)
+		{
+			return false;
+		}
+
+		// the search box on the world map can be focused, and chat input goes there, even
+		// though the chatbox still has its key listener.
+		Widget worldMapSearch = client.getWidget(WidgetInfo.WORLD_MAP_SEARCH);
+		return worldMapSearch == null || client.getVar(VarClientInt.WORLD_MAP_SEARCH_FOCUSED) != 1;
+	}
+
+    void pause() {
+        oculusX = client.getOculusOrbFocalPointX(); 
+        oculusY = client.getOculusOrbFocalPointY();
+        client.setOculusOrbState(0);
+    }
+
+    void enable() {
+        client.setOculusOrbState(1);
+        client.setOculusOrbFocalPointX(oculusX);
+        client.setOculusOrbFocalPointY(oculusY);
     }
 }
 
@@ -182,48 +203,38 @@ class DetachedCameraListener implements KeyListener {
          * if (!plugin.chatboxFocused()) { //if not focused on chatbox (or world
          * search), return return; }
          */
+        // TODO check key remapping config setting for enter to chat, instead of checking for explicit string
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             Widget chatbox = client.getWidget(WidgetInfo.CHATBOX_INPUT);
             if (client.getOculusOrbState() != 0 && chatbox != null
                     && chatbox.getText().contains("Press Enter to Chat...")) {
 
                 plugin.chattingState = true;
-                plugin.oculusX = client.getOculusOrbFocalPointX(); 
-                plugin.oculusY = client.getOculusOrbFocalPointY();
-                client.setOculusOrbState(0);
+                plugin.pause();
             } else if (plugin.chattingState && client.getOculusOrbState() == 0) {
                 // User is pressing enter to send and exiting chat
                 plugin.chattingState = false;
 
-                client.setOculusOrbState(1);
-                client.setOculusOrbFocalPointX(plugin.oculusX);
-                client.setOculusOrbFocalPointY(plugin.oculusY);
+                plugin.enable();
             } else if (plugin.chattingState) {
                 // User has somehow turned detached back on
                 plugin.chattingState = false;
             }
-            // TODO this may be useful to lock oculus back on when attemping to exit chat
-            /*
-             * case KeyEvent.VK_ESCAPE: // When exiting typing mode, block the escape key //
-             * so that it doesn't trigger the in-game hotkeys e.consume();
-             * plugin.setTyping(false); clientThread.invoke(() -> {
-             * client.setVar(VarClientStr.CHATBOX_TYPED_TEXT, ""); plugin.lockChat(); });
-             * break;
-             */
+        }
 
-            // TODO see above todo
-            /*
-             * case KeyEvent.VK_BACK_SPACE: // Only lock chat on backspace when the typed
-             * text is now empty if
-             * (Strings.isNullOrEmpty(client.getVar(VarClientStr.CHATBOX_TYPED_TEXT))) {
-             * plugin.setTyping(false); clientThread.invoke(plugin::lockChat); } break;
-             */
+        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE 
+            && plugin.chattingState 
+            && client.getOculusOrbState() == 0 
+            && Strings.isNullOrEmpty(client.getVar(VarClientStr.CHATBOX_TYPED_TEXT))) {
+                // User is pressing escape to cancel/clear and exiting chat
+                plugin.chattingState = false;
+
+                plugin.enable();
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        final int keyCode = e.getKeyCode();
         final char keyChar = e.getKeyChar();
 
         if (keyChar == KeyEvent.VK_ENTER) {
