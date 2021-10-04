@@ -55,7 +55,6 @@ Temporary Items
 
 # Directories from openosrs plugins
 */build/*
-buildSrc
 config
 */bin/*
 .github
