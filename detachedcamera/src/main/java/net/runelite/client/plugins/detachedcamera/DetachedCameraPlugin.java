@@ -61,7 +61,6 @@ public class DetachedCameraPlugin extends Plugin {
     private final HotkeyListener cameraHotkey = new HotkeyListener(() -> config.hotkey()) {
         @Override
         public void hotkeyPressed() {
-            log.info("Toggled detached camera");
             if (client.getOculusOrbState() == 0) {
                 client.setOculusOrbState(1);
                 client.setOculusOrbNormalSpeed(36);
@@ -127,12 +126,9 @@ public class DetachedCameraPlugin extends Plugin {
         if (dialogsOpen()) {
             waitOnDialogs = true;
 
-            log.info("dialogs are open");
             pause();
         } else if (!dialogsOpen() && waitOnDialogs) {
             waitOnDialogs = false;
-
-            log.info("dialog closed, resuming");
 
             enable();
         }
