@@ -35,18 +35,19 @@ import org.pf4j.Extension;
 
 @Extension
 @PluginDescriptor(
-        name = "Pray Saver",
+        name = "Slay Saver",
         description = "Save your pray while you slay",
-        type = PluginType.UTILITY
+        enabledByDefault = false,
+        tags = {"automation, hotkey, slayer"}
 )
 @Slf4j
-public class PraySaver extends Plugin {
+public class SlaySaver extends Plugin {
     @Inject
     private Client client;
     @Inject
     private KeyManager keyManager;
     @Inject
-    private PraySaverConfig config;
+    private SlaySaverConfig config;
 
     private boolean running = false;
     private ExecutorService executor;
@@ -118,13 +119,8 @@ public class PraySaver extends Plugin {
     }
 
     private void dispatchError(String msg) {
-        String str = ColorUtil.wrapWithColorTag("Pray Saver: ", Color.RED)
-                //+ " has encountered an "
-                + ColorUtil.wrapWithColorTag(msg, Color.BLACK);
-        //+ ": "
-        //+ error;
-
-        client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", str, null);
+        String str = ColorUtil.wrapWithColorTag(msg, Color.RED);
+        client.addChatMessage(ChatMessageType.PRIVATECHAT, "Slay Saver", str, null);
     }
 
     /**

@@ -12,21 +12,9 @@ import net.runelite.client.config.ConfigTitleSection;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.config.Title;
 
-@ConfigGroup("PraySaverConfig")
-public interface PraySaverConfig extends Config
+@ConfigGroup("SlaySaverConfig")
+public interface SlaySaverConfig extends Config
 {
-
-	@ConfigTitleSection(
-		position = 1,
-		keyName = "mainConfig",
-		name = "Main Config",
-		description = ""
-	)
-	default Title mainConfig()
-	{
-		return new Title();
-	}
-
 	@ConfigItem(
 		keyName = "bumMode",
 		name = "Enable pray on enter combat",

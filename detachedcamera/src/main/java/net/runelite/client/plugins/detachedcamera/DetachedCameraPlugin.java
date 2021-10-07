@@ -120,7 +120,7 @@ public class DetachedCameraPlugin extends Plugin {
             oculusY = client.getOculusOrbFocalPointY();
         }
 
-        if (dialogsOpen()) {
+        if (client.getOculusOrbState() != 0 && dialogsOpen() ) {
             waitOnDialogs = true;
 
             pause();
@@ -195,7 +195,8 @@ class DetachedCameraListener implements KeyListener {
         // TODO check key remapping config setting for enter to chat, instead of checking for explicit string
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             Widget chatbox = client.getWidget(WidgetInfo.CHATBOX_INPUT);
-            if (client.getOculusOrbState() != 0 && chatbox != null
+            if (client.getOculusOrbState() != 0
+                    && chatbox != null
                     && chatbox.getText().contains("Press Enter to Chat...")) {
 
                 plugin.chattingState = true;

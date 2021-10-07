@@ -1,6 +1,4 @@
 /*
- * Copyright (c) 2019 Owain van Brakel <https://github.com/Owain94>
- * Copyright (c) 2019 Ganom <https://github.com/Ganom>
  * Copyright (c) 2019 weblue
  * All rights reserved.
  *
@@ -25,9 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "0.0.5-rc1"
+version = "0.0.1"
 
-project.extra["PluginName"] = "Pray Saver"
+project.extra["PluginName"] = "Slay Saver"
 project.extra["PluginDescription"] = "Save your pray while you slay"
 
 tasks {
