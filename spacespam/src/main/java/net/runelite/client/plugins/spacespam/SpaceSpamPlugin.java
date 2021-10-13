@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
+import net.runelite.api.GameState;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.WidgetID;
 import net.runelite.client.config.ConfigManager;
@@ -73,7 +74,7 @@ public class SpaceSpamPlugin extends Plugin {
 
     @Override
     protected void startUp() {
-        executor = Executors.newFixedThreadPool(1);
+        executor = Executors.newSingleThreadExecutor();
         keyManager.registerKeyListener(hotkey);
     }
 
@@ -89,7 +90,7 @@ public class SpaceSpamPlugin extends Plugin {
     private void onWidgetLoaded(WidgetLoaded event)
     {
         if (running && event.getGroupId() == WidgetID.MULTISKILL_MENU_GROUP_ID) {
-            press();
+            executor.submit(this::press);
         }
     }
 

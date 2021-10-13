@@ -4,6 +4,7 @@ import com.google.inject.Provides;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.util.Objects;
 import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
@@ -138,7 +139,7 @@ public class DetachedCameraPlugin extends Plugin {
     
     private boolean dialogsOpen()
 	{
-        if (client.getWidget(WidgetInfo.BANK_PIN_CONTAINER) != null && !client.getWidget(WidgetInfo.BANK_PIN_CONTAINER).isHidden()) {
+        if (client.getWidget(WidgetInfo.BANK_PIN_CONTAINER) != null && !Objects.requireNonNull(client.getWidget(WidgetInfo.BANK_PIN_CONTAINER)).isHidden()) {
             return true;
         }
 
@@ -171,28 +172,23 @@ public class DetachedCameraPlugin extends Plugin {
     }
 }
 
+@Slf4j
 class DetachedCameraListener implements KeyListener {
     @Inject
     private DetachedCameraPlugin plugin;
-    @Inject
-    private DetachedCameraConfig config;
 
     @Inject
     private Client client;
 
-    private boolean blockEnter = false;
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // block enter to stop spam
-        if (e.getKeyChar() == KeyEvent.VK_ENTER && blockEnter) {
-            e.consume();
-        }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // TODO check key remapping config setting for enter to chat, instead of checking for explicit string
+        // TODO check key remapping config setting
+        //  for enter to chat, instead of checking for explicit string
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             Widget chatbox = client.getWidget(WidgetInfo.CHATBOX_INPUT);
             if (client.getOculusOrbState() != 0
@@ -221,14 +217,18 @@ class DetachedCameraListener implements KeyListener {
 
                 plugin.enable();
         }
+
+        if (e.getKeyCode() == KeyEvent.VK_SLASH
+                && plugin.chattingState
+                && client.getOculusOrbState() != 0) {
+            // User is pressing escape to cancel/clear and exiting chat
+            plugin.chattingState = true;
+            plugin.pause();
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        final char keyChar = e.getKeyChar();
 
-        if (keyChar == KeyEvent.VK_ENTER) {
-            blockEnter = false;
-        }
     }
 }
