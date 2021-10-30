@@ -78,6 +78,7 @@ subprojects {
         compileOnly(group = "org.pf4j", name = "pf4j", version = "3.5.0")
         compileOnly(group = "io.reactivex.rxjava3", name = "rxjava", version = "3.0.7")
         compileOnly(group = "org.pushing-pixels", name = "radiance-substance", version = "2.5.1")
+//        compileOnly("com.grunka.random.fortuna:fortuna:2.1")
 
         testAnnotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.16")
 

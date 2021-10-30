@@ -208,6 +208,14 @@ class DetachedCameraListener implements KeyListener {
             }
         }
 
+        if (e.getKeyCode() == KeyEvent.VK_TAB
+                && client.getOculusOrbState() != 0
+                && !plugin.chattingState) {
+            plugin.chattingState = true;
+
+            plugin.pause();
+        }
+
         if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE 
             && plugin.chattingState 
             && client.getOculusOrbState() == 0 
@@ -219,9 +227,8 @@ class DetachedCameraListener implements KeyListener {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_SLASH
-                && plugin.chattingState
+                && !plugin.chattingState
                 && client.getOculusOrbState() != 0) {
-            // User is pressing escape to cancel/clear and exiting chat
             plugin.chattingState = true;
             plugin.pause();
         }

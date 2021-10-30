@@ -3,7 +3,7 @@ rootProject.name = "Nader Plugins"
 include(":spacespam")
 include(":detachedcamera")
 include(":OneClick")
-include(":AutoClicker")
+include(":autoMouse")
 include(":WildyAutoHop")
 include(":npcstatus")
 include(":NPCOverheadDialog")
