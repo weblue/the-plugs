@@ -59,6 +59,18 @@ public interface autoMouseConfig extends Config
 		return false;
 	}
 
+	@ConfigItem(
+			keyName = "move",
+			name = "Add small movements",
+			description = "Booty butt cheeks",
+			position = 0,
+			section = mainConfig
+	)
+	default boolean move()
+	{
+		return false;
+	}
+
 	@ConfigSection(
 			position = 0,
 			keyName = "boundsConfig",

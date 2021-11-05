@@ -143,11 +143,20 @@ public class autoMouse extends Plugin
 			final Dimension real = client.getRealDimensions();
 			final double width = (stretched.width / real.getWidth());
 			final double height = (stretched.height / real.getHeight());
-			final Point point = new Point((int) (p.getX() * width), (int) (p.getY() * height));
+			Point point = new Point((int) (p.getX() * width), (int) (p.getY() * height));
+			if (config.move()) {
+				point = new Point(point.getX() + (int) Math.floor(random.nextGaussian() * 7) - 3, point.getY() + (int) Math.floor(random.nextGaussian() * 7) - 3);
+			}/* else {
+				point = new Point((int) (p.getX() * width), (int) (p.getY() * height));
+			}*/
 			mouseEvent(501, point);
 			mouseEvent(502, point);
 			mouseEvent(500, point);
 			return;
+		}
+
+		if (config.move()) {
+			p = new Point(p.getX() + (int) Math.floor(random.nextGaussian() * 7) - 3, p.getY() + (int) Math.floor(random.nextGaussian() * 7) - 3);
 		}
 
 		mouseEvent(501, p);
@@ -159,7 +168,17 @@ public class autoMouse extends Plugin
 		assert !client.isClientThread();
 
 		while (run) {
-			if (client.getGameState() != GameState.LOGGED_IN || checkHitpoints() || checkInventory()) {
+			if (client.getGameState() == GameState.LOADING) {
+				try {
+					Thread.sleep(60);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				continue;
+			}
+
+			GameState butt = client.getGameState();
+			if (butt != GameState.LOGGED_IN || checkHitpoints() || checkInventory()) {
 				run = false;
 				if (config.flash())
 				{
