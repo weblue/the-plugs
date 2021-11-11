@@ -1,4 +1,4 @@
-package com.owain.autohop;
+package net.runelite.client.plugins.autohop;
 
 import com.google.inject.Provides;
 import java.util.EnumSet;
