@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.externals.oneclick.comparables;
+package net.runelite.client.plugins.externals.oneclick.Comparables;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,6 +7,7 @@ import java.util.Map;
 import lombok.Setter;
 import net.runelite.api.Client;
 import net.runelite.api.MenuEntry;
+import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
@@ -25,9 +26,9 @@ public abstract class ClickCompare
 	@Setter
 	protected OneClickPlugin plugin;
 
-	public abstract boolean isEntryValid(MenuEntry event);
+	public abstract boolean isEntryValid(MenuEntryAdded event);
 
-	public abstract void modifyEntry(MenuEntry event);
+	public abstract void modifyEntry(MenuEntryAdded event);
 
 	public abstract boolean isClickValid(MenuOptionClicked event);
 
