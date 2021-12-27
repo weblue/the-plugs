@@ -3,6 +3,11 @@ version = "1.0.0"
 project.extra["PluginName"] = "Space Spam"
 project.extra["PluginDescription"] = "Everybody get up, it's time to spam now"
 
+dependencies {
+    annotationProcessor(Libraries.lombok)
+    annotationProcessor(Libraries.pf4j)
+}
+
 tasks {
     jar {
         manifest {

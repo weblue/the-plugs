@@ -14,7 +14,7 @@ apply<VersionPlugin>()
 
 allprojects {
     group = "com.openosrs"
-    version = ProjectVersions.openosrsVersion
+    version = ProjectVersions.rlVersion
     apply<MavenPublishPlugin>()
 }
 
@@ -63,9 +63,9 @@ subprojects {
         annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.16")
         annotationProcessor(group = "org.pf4j", name = "pf4j", version = "3.5.0")
 
-        compileOnly(group = "com.openosrs", name = "http-api", version = ProjectVersions.openosrsVersion)
-        compileOnly(group = "com.openosrs", name = "runelite-api", version = ProjectVersions.openosrsVersion)
-        compileOnly(group = "com.openosrs", name = "runelite-client", version = ProjectVersions.openosrsVersion)
+        compileOnly(group = "com.openosrs", name = "http-api", version = ProjectVersions.rlVersion)
+        compileOnly(group = "com.openosrs", name = "runelite-api", version = ProjectVersions.rlVersion)
+        compileOnly(group = "com.openosrs", name = "runelite-client", version = ProjectVersions.rlVersion)
 
         compileOnly(group = "org.apache.commons", name = "commons-text", version = "1.9")
         compileOnly(group = "com.google.guava", name = "guava", version = "30.0-jre")
@@ -82,9 +82,9 @@ subprojects {
 
         testAnnotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.16")
 
-        testImplementation(group = "com.openosrs", name = "http-api", version = ProjectVersions.openosrsVersion)
-        testImplementation(group = "com.openosrs", name = "runelite-api", version = ProjectVersions.openosrsVersion)
-        testImplementation(group = "com.openosrs", name = "runelite-client", version = ProjectVersions.openosrsVersion)
+        testImplementation(group = "com.openosrs", name = "http-api", version = ProjectVersions.rlVersion)
+        testImplementation(group = "com.openosrs", name = "runelite-api", version = ProjectVersions.rlVersion)
+        testImplementation(group = "com.openosrs", name = "runelite-client", version = ProjectVersions.rlVersion)
 
         testImplementation(group = "org.pf4j", name = "pf4j", version = "3.5.0")
         testImplementation(group = "com.google.inject.extensions", name = "guice-testlib", version = "4.2.3")

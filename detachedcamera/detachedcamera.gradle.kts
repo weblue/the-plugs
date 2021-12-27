@@ -3,6 +3,11 @@ version = "1.0.0"
 project.extra["PluginName"] = "Detached Camera"
 project.extra["PluginDescription"] = "Oculus orb on hotkey"
 
+dependencies {
+    annotationProcessor(Libraries.lombok)
+    annotationProcessor(Libraries.pf4j)
+}
+
 tasks {
     jar {
         manifest {

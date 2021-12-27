@@ -29,11 +29,11 @@ project.extra["PluginName"] = "NPC Status Timer"
 project.extra["PluginDescription"] = "Adds a timer on NPC's for their attacks and flinching"
 
 dependencies {
-    annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.12")
-    annotationProcessor(group = "org.pf4j", name = "pf4j", version = "3.2.0")
+    annotationProcessor(Libraries.lombok)
+    annotationProcessor(Libraries.pf4j)
 
-    compileOnly("com.openosrs:runelite-api:ProjectVersions.openosrsVersion")
-    compileOnly("com.openosrs:runelite-client:ProjectVersions.openosrsVersion")
+    compileOnly("com.openosrs:runelite-api:ProjectVersions.rlVersion")
+    compileOnly("com.openosrs:runelite-client:ProjectVersions.rlVersion")
 }
 
 tasks {
