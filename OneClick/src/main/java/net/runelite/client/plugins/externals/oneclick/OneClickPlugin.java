@@ -29,11 +29,11 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
-import net.runelite.client.plugins.externals.oneclick.comparables.misc.Blank;
-import net.runelite.client.plugins.externals.oneclick.comparables.misc.Custom;
-import net.runelite.client.plugins.externals.oneclick.comparables.misc.Healer;
-import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Spell;
+import net.runelite.client.plugins.externals.oneclick.Comparables.ClickCompare;
+import net.runelite.client.plugins.externals.oneclick.Comparables.misc.Blank;
+import net.runelite.client.plugins.externals.oneclick.Comparables.misc.Custom;
+import net.runelite.client.plugins.externals.oneclick.Comparables.misc.Healer;
+import net.runelite.client.plugins.externals.oneclick.Comparables.skilling.Spell;
 import org.pf4j.Extension;
 
 @Extension
@@ -90,7 +90,6 @@ public class OneClickPlugin extends Plugin
 	@Subscribe
 	public void onWidgetPressed(WidgetPressed event)
 	{
-		log.info("Widget Pressed: {}", client.getTickCount());
 		for (MenuEntry menuEntry : client.getMenuEntries())
 		{
 			if (menuEntry.isForceLeftClick())
@@ -215,8 +214,6 @@ public class OneClickPlugin extends Plugin
 			event.consume();
 			return;
 		}
-
-		log.info("Clicked: {}", client.getTickCount());
 
 		if (event.getMenuTarget() == null)
 		{

@@ -6,7 +6,7 @@ import static net.runelite.api.MenuAction.ITEM_USE_ON_WIDGET_ITEM;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOptionClicked;
-import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
+import net.runelite.client.plugins.externals.oneclick.Comparables.ClickCompare;
 
 public class Compost extends ClickCompare
 {

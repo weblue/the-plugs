@@ -5,7 +5,7 @@ import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOptionClicked;
-import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
+import net.runelite.client.plugins.externals.oneclick.Comparables.ClickCompare;
 
 public class Tiara extends ClickCompare
 {

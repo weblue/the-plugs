@@ -19,8 +19,4 @@ public interface SpaceSpamConfig extends Config
 		return Keybind.NOT_SET;
 	}
 
-	@ConfigItem(
-			keyName = ""
-	)
-
 }

@@ -14,7 +14,7 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.plugins.externals.oneclick.ClickItem;
 import net.runelite.client.plugins.externals.oneclick.Spells;
-import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
+import net.runelite.client.plugins.externals.oneclick.Comparables.ClickCompare;
 import org.apache.commons.lang3.tuple.Pair;
 
 @Slf4j

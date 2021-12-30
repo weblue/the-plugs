@@ -3,9 +3,9 @@ package net.runelite.client.plugins.externals.oneclick;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.runelite.api.widgets.WidgetInfo;
-import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
-import net.runelite.client.plugins.externals.oneclick.comparables.misc.Blank;
-import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Spell;
+import net.runelite.client.plugins.externals.oneclick.Comparables.ClickCompare;
+import net.runelite.client.plugins.externals.oneclick.Comparables.misc.Blank;
+import net.runelite.client.plugins.externals.oneclick.Comparables.skilling.Spell;
 
 @AllArgsConstructor
 @Getter

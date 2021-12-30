@@ -11,21 +11,21 @@ import lombok.Getter;
 import static net.runelite.api.ItemID.AIR_RUNE;
 import static net.runelite.api.ItemID.EARTH_RUNE;
 import static net.runelite.api.ItemID.WATER_RUNE;
-import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
-import net.runelite.client.plugins.externals.oneclick.comparables.misc.Blank;
-import net.runelite.client.plugins.externals.oneclick.comparables.misc.Compost;
-import net.runelite.client.plugins.externals.oneclick.comparables.misc.Custom;
-import net.runelite.client.plugins.externals.oneclick.comparables.misc.Healer;
-import net.runelite.client.plugins.externals.oneclick.comparables.misc.Herbtar;
-import net.runelite.client.plugins.externals.oneclick.comparables.misc.Seeds;
-import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Birdhouses;
-import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Bones;
-import net.runelite.client.plugins.externals.oneclick.comparables.skilling.DarkEssence;
-import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Darts;
-import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Firemaking;
-import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Karambwans;
-import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Runes;
-import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Tiara;
+import net.runelite.client.plugins.externals.oneclick.Comparables.ClickCompare;
+import net.runelite.client.plugins.externals.oneclick.Comparables.misc.Blank;
+import net.runelite.client.plugins.externals.oneclick.Comparables.misc.Compost;
+import net.runelite.client.plugins.externals.oneclick.Comparables.misc.Custom;
+import net.runelite.client.plugins.externals.oneclick.Comparables.misc.Healer;
+import net.runelite.client.plugins.externals.oneclick.Comparables.misc.Herbtar;
+import net.runelite.client.plugins.externals.oneclick.Comparables.misc.Seeds;
+import net.runelite.client.plugins.externals.oneclick.Comparables.skilling.Birdhouses;
+import net.runelite.client.plugins.externals.oneclick.Comparables.skilling.Bones;
+import net.runelite.client.plugins.externals.oneclick.Comparables.skilling.DarkEssence;
+import net.runelite.client.plugins.externals.oneclick.Comparables.skilling.Darts;
+import net.runelite.client.plugins.externals.oneclick.Comparables.skilling.Firemaking;
+import net.runelite.client.plugins.externals.oneclick.Comparables.skilling.Karambwans;
+import net.runelite.client.plugins.externals.oneclick.Comparables.skilling.Runes;
+import net.runelite.client.plugins.externals.oneclick.Comparables.skilling.Tiara;
 
 @AllArgsConstructor
 @Getter
