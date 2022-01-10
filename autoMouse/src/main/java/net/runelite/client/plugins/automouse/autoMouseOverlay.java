@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import javax.inject.Inject;
 import net.runelite.api.Client;
+import net.runelite.api.Point;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -36,6 +37,11 @@ class autoMouseOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
+		Point point = client.getMouseCanvasPosition();
+		if (point != null && point.getX() >= 0 && point.getY() >= 0) {
+			drawBigDot(graphics, Color.red, point.getX(), point.getY());
+		}
+
 		if (plugin.isFlash() && config.flash())
 		{
 			final Color flash = graphics.getColor();
@@ -50,6 +56,11 @@ class autoMouseOverlay extends Overlay
 			}
 		}
 		return null;
+	}
+
+	public static void drawBigDot(Graphics2D graphics, Color color, int x, int y) {
+		graphics.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), 120));
+		graphics.fillRect(x, y, 4, 4);
 	}
 
 }

@@ -1,11 +1,11 @@
 rootProject.name = "Nader Plugins"
 
-include(":spacespam")
+//include(":spacespam")
 include(":detachedcamera")
 include(":OneClick")
 include(":autoMouse")
 include(":WildyAutoHop")
-include(":npcstatus")
+//include(":npcstatus")
 include(":NPCOverheadDialog")
 //include(":chinglassblow")
 //include(":CustomSwapper")
