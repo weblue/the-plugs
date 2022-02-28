@@ -118,7 +118,7 @@ subprojects {
         }
     }
 
-    configure<JavaPluginConvention> {
+    configure<JavaPluginExtension> {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -150,7 +150,8 @@ subprojects {
                     into("../release/")
                 }
 
-                val externalManagerDirectory: String = project.findProperty("externalManagerDirectory")?.toString() ?: System.getProperty("user.home") + "\\.openosrs\\plugins"
+                val externalManagerDirectory: String = project.findProperty("externalManagerDirectory")?.toString()
+                    ?: (System.getProperty("user.home") + "\\.openosrs\\plugins")
                 copy {
                     from("./build/libs/")
                     into(externalManagerDirectory)

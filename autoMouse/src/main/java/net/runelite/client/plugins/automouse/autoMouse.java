@@ -40,6 +40,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static java.lang.Thread.sleep;
+import static net.runelite.client.plugins.automouse.Edge.*;
+import static net.runelite.client.plugins.automouse.MovementPattern.*;
 
 @SuppressWarnings("BusyWait")
 @Extension
@@ -60,8 +62,10 @@ public class autoMouse extends Plugin {
     private KeyManager keyManager;
 
     private ExecutorService executorService;
-    private SecureRandom random;
+    private SecureRandom random = new SecureRandom();
     private boolean run;
+    private boolean offScreenNoClick = false;
+    private Point startingPos;
 
     @Getter(AccessLevel.PACKAGE)
     @Setter(AccessLevel.PACKAGE)
@@ -77,7 +81,7 @@ public class autoMouse extends Plugin {
         overlayManager.add(overlay);
         keyManager.registerKeyListener(hotkeyListener);
         executorService = Executors.newSingleThreadExecutor();
-        random = new SecureRandom();
+        startingPos = new Point(random.nextInt(753), random.nextInt(463));
     }
 
     @Override
@@ -85,7 +89,6 @@ public class autoMouse extends Plugin {
         overlayManager.remove(overlay);
         keyManager.unregisterKeyListener(hotkeyListener);
         executorService.shutdown();
-        random = null;
     }
 
     private final HotkeyListener hotkeyListener = new HotkeyListener(() -> config.toggle()) {
@@ -96,6 +99,7 @@ public class autoMouse extends Plugin {
                 return;
             }
 
+            startingPos = client.getMouseCanvasPosition();
             executorService.submit(() -> clickLoop());
         }
     };
@@ -142,24 +146,90 @@ public class autoMouse extends Plugin {
     }
 
     //If this is ever in a separate thread, make sure to wait for return
-    public void move(Point origin, Point destination) {
+    public Point move(Point origin) {
         assert !client.isClientThread();
 
-//        Point origin = client.getMouseCanvasPosition();
-        destination = getStretchedPoint(destination);
+        Point destination;
 
-        List<Point> points = genPoints(origin, destination);
+        double rand = Math.random();
+        MovementPattern movement = rand > .49 ? NO_MOVE : (rand > .20 ? SMALL_MOVE : (rand > .10 ? BIG_MOVE : MOVE_OFF_SCREEN));
+        log.info("Next movement type: {}", movement.name());
+
+        switch (movement) {
+            case NO_MOVE:
+                long delay = randomConfiguredDelay(config.deviation(), config.target());
+//                log.info("No move; sleeping for {}", delay);
+                try {
+                    sleep(delay);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return origin;
+            case MOVE_OFF_SCREEN:
+                offScreenNoClick = true;
+                rand = Math.random();
+                Edge edge = rand > .75 ? NORTH : (rand > .50 ? EAST : (rand > .25 ? SOUTH : WEST));
+                log.info("Moving off screen to the: {}", edge.name());
+
+                switch(edge) {
+                    case NORTH:
+                        destination = new Point( random.nextInt(1506) - 653, -1 - random.nextInt(284));
+                        break;
+                    case EAST:
+                        destination = new Point( random.nextInt(300) + 754, random.nextInt(926) - 263);
+                        break;
+                    case SOUTH:
+                        destination = new Point( random.nextInt(1506) - 653, random.nextInt(284) + 464);
+                        break;
+                    case WEST:
+                    default:
+                        destination = new Point( -1 - random.nextInt(284), random.nextInt(926) - 263);
+                        break;
+                }
+
+                break;
+            case BIG_MOVE:
+                //30 pixels less than the max on the x axis to reduce inv + minimap clicks TODO figure out real number
+                destination = new Point(random.nextInt(723), random.nextInt(463));
+                break;
+            case SMALL_MOVE:
+            default:
+                destination = new Point(origin.getX() + (int) Math.floor(random.nextGaussian() * 7) - 3, origin.getY() + (int) Math.floor(random.nextGaussian() * 7) - 3);
+                break;
+        }
+
+        List<Point> points = genPoints(origin, getStretchedPoint(destination));
 
         points.forEach((point1) -> {
             long delta = (long) Math.floor(Math.abs(random.nextGaussian()) * 20);
             long time = System.currentTimeMillis() + delta;
-            client.getCanvas().dispatchEvent(new MouseEvent(client.getCanvas(), MouseEvent.MOUSE_MOVED, time, 0, point1.getX(), point1.getY(), 0, false, 0));
+            if ((point1.getX() <= 753 && point1.getX() >= 0) && (point1.getY() <= 463 && point1.getY() >= 0)) {
+                if ((client.getMouseCanvasPosition().getX() == 0 && client.getMouseCanvasPosition().getY() == 0)) {
+                    client.getCanvas().dispatchEvent(new MouseEvent(client.getCanvas(), MouseEvent.MOUSE_ENTERED, time, 0, point1.getX(), point1.getY(), 0, false, 0));
+                } else {
+                    client.getCanvas().dispatchEvent(new MouseEvent(client.getCanvas(), MouseEvent.MOUSE_MOVED, time, 0, point1.getX(), point1.getY(), 0, false, 0));
+                }
+            } else {
+                client.getCanvas().dispatchEvent(new MouseEvent(client.getCanvas(), MouseEvent.MOUSE_EXITED, time, 0, point1.getX(), point1.getY(), 0, false, 0));
+            }
+
             try {
                 sleep(delta);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
+
+        if(!(client.getMouseCanvasPosition().getX() == 0 && client.getMouseCanvasPosition().getY() == 0)) {
+            offScreenNoClick = false;
+        } else {
+            //TODO this isn't going off
+            log.info("Mouse off screen, offScreenNoClick: {}", offScreenNoClick);
+        }
+
+        //TODO this is currently broken because of timing
+        log.info("current mouse position: {}, {} last destination: {}, {}", client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY(), destination.getX(), destination.getY());
+        return getStretchedPoint(destination);
     }
 
     private Point getStretchedPoint(Point destination) {
@@ -177,7 +247,8 @@ public class autoMouse extends Plugin {
     private void clickLoop() {
         assert !client.isClientThread();
 
-        Point origin = new Point(random.nextInt(753), random.nextInt(463));
+        Point origin = startingPos;
+//        Point origin = new Point(random.nextInt(753), random.nextInt(463));
 
         while (run) {
             if (client.getGameState() == GameState.LOADING) {
@@ -199,11 +270,11 @@ public class autoMouse extends Plugin {
             }
 
             if (config.move()) {
-                Point dest = new Point(random.nextInt(753), random.nextInt(463));
-                move(origin, dest);
-                origin = getStretchedPoint(client.getMouseCanvasPosition());
+                origin = move(origin);
+//                origin = getStretchedPoint(client.getMouseCanvasPosition());
             }
-            click();
+            if (!offScreenNoClick)
+                click();
 
             try {
                 long delay = randomConfiguredDelay(config.deviation(), config.target());
@@ -234,6 +305,7 @@ public class autoMouse extends Plugin {
      * clamp it to min max, any values outside of range are set to min or max
      */
     //Target is pretty useless
+    //TODO change this to generate more randomly, while still normalizing towards target
     private long randomConfiguredDelay(int deviation, int target) {
         return (long) clamp((-Math.log(Math.abs(random.nextGaussian()))) * deviation + target);
     }
@@ -268,6 +340,7 @@ public class autoMouse extends Plugin {
         List<Point> points = new ArrayList<>();
 
         double distance = Math.hypot(xDistance, yDistance);
+        //TODO change this
         Pair<Flow, Long> flowTime = getFlowWithTime(distance, 500);
         Flow flow = flowTime.x;
         long mouseMovementMs = flowTime.y;
@@ -277,10 +350,6 @@ public class autoMouse extends Plugin {
       /* Number of steps is calculated from the movement time and limited by minimal amount of steps
          (should have at least MIN_STEPS) and distance (shouldn't have more steps than pixels travelled) */
         int steps = (int) Math.ceil(Math.min(distance, Math.max(mouseMovementMs / 8, minSteps)));
-
-        long startTime = System.currentTimeMillis();
-        ;
-        long stepTime = (long) (mouseMovementMs / (double) steps);
 
         double deviationMultiplierX = (random.nextDouble() - 0.5) * 2;
         double deviationMultiplierY = (random.nextDouble() - 0.5) * 2;
@@ -316,7 +385,6 @@ public class autoMouse extends Plugin {
             simulatedMouseX += xStepSize;
             simulatedMouseY += yStepSize;
 
-            long endTime = startTime + stepTime * (i + 1);
             int mousePosX = roundTowards(simulatedMouseX + deviation.getX() * deviationMultiplierX * effectFadeMultiplier, nextPoint.getX());
 
             int mousePosY = roundTowards(simulatedMouseY + deviation.getY() * deviationMultiplierY * effectFadeMultiplier, nextPoint.getY());
@@ -361,4 +429,18 @@ public class autoMouse extends Plugin {
 
         return new Pair<>(flow, (long) time);
     }
+}
+
+enum MovementPattern {
+    NO_MOVE,
+    SMALL_MOVE,
+    BIG_MOVE,
+    MOVE_OFF_SCREEN
+}
+
+enum Edge {
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
 }
