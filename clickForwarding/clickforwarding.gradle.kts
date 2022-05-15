@@ -25,6 +25,20 @@ tasks {
         archiveClassifier.set("shaded")
     }
 
+    withType<Jar> {
+        val externalManagerDirectory: String = project.findProperty("externalManagerDirectory")?.toString()
+            ?: (System.getProperty("user.home") + "\\.openosrs\\plugins")
+
+        doLast {
+            delete (
+                files("${externalManagerDirectory}/ClickForwarding-1.0.0.jar")
+            )
+            delete (
+                files("../release/ClickForwarding-1.0.0.jar")
+            )
+        }
+    }
+
     jar {
         manifest {
             attributes(mapOf(
