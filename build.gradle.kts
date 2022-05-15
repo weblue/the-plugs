@@ -7,6 +7,7 @@ buildscript {
 plugins {
     checkstyle
     java
+    kotlin("jvm") version "1.6.21"
 }
 
 apply<BootstrapPlugin>()
@@ -32,6 +33,8 @@ subprojects {
                 excludeGroupByRegex("com\\.runelite.*")
             }
         }
+
+        maven( "https://dl.bintray.com/oprs/")
 
         exclusiveContent {
             forRepository {

@@ -9,6 +9,7 @@ include(":WildyAutoHop")
 include(":NPCOverheadDialog")
 //include(":chinglassblow")
 //include(":CustomSwapper")
+include(":ClickForwarding")
 
 for (project in rootProject.children) {
     project.apply {
